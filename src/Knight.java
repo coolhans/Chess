@@ -6,7 +6,7 @@ public class Knight extends Piece {
     private PieceColor color;
     private ArrayList<Coords> movesList;
     private Piece compPiece = new None();
-
+    private PieceType pieceType = PieceType.KNIGHT;
     public Knight(PieceColor color, Coords position){
         this.color = color;
         this.position = position;

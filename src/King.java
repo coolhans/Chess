@@ -7,7 +7,7 @@ public class King extends Piece {
     private ArrayList<Coords> movesList;
     private Coords tempCoords = new Coords();
     private Piece compPiece = new None();
-
+    private PieceType pieceType = PieceType.KING;
     public King(PieceColor color, Coords position){
         this.color = color;
         this.position = position;

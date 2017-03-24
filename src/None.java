@@ -5,7 +5,7 @@ public class None extends Piece{
     private Coords position = new Coords();
     private PieceColor color = PieceColor.NOCOLOR;
     private ArrayList<Coords> movesList = null;
-
+    private PieceType pieceType = PieceType.NONE;
     public None(){
         this.color = color;
         this.position = position;
@@ -27,5 +27,8 @@ public class None extends Piece{
         return this.color;
     }
 
-
+    @Override
+    public PieceType getPieceType(){
+        return this.pieceType;
+    }
 }

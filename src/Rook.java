@@ -176,7 +176,7 @@ public class Rook extends Piece {
 
     @Override
     public PieceType getPieceType(){
-        return PieceType.ROOK;
+        return this.pieceType;
     }
 
     @Override

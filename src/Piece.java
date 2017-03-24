@@ -25,9 +25,7 @@ public abstract class Piece {
         return position;
     }
 
-    public PieceColor getPieceColor(){
-        return pieceColor;
-    }
+    public abstract PieceColor getPieceColor();
 
     public boolean hasMoved(){
         return moved;
@@ -37,9 +35,7 @@ public abstract class Piece {
         return board;
     }
 
-    public PieceType getPieceType(){
-        return pieceType;
-    }
+    public abstract PieceType getPieceType();
 
 }
 

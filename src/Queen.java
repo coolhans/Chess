@@ -10,7 +10,7 @@ public class Queen extends Piece {
     private Coords upRight = new Coords(-1,1);
     private Coords downRight = new Coords(1,1);
     private Coords downLeft = new Coords(1,-1);
-
+    private PieceType pieceType = PieceType.QUEEN;
     public Queen(PieceColor color, Coords position){
         this.color = color;
         this.position = position;
@@ -329,11 +329,6 @@ public class Queen extends Piece {
     }
 
     @Override
-    public PieceType getPieceType(){
-        return PieceType.QUEEN;
-    }
-
-    @Override
     public PieceColor getPieceColor(){
         return this.color;
     }
@@ -344,5 +339,8 @@ public class Queen extends Piece {
         this.position.setX(newCoords.getX());
         this.position.setY(newCoords.getY());
     }
-
+    @Override
+    public PieceType getPieceType(){
+        return this.pieceType;
+    }
 }

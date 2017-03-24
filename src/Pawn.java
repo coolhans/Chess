@@ -6,7 +6,7 @@ public class Pawn extends Piece{
     private PieceColor color;
     private ArrayList<Coords> movesList;
     private Piece compPiece = new None();
-
+    private PieceType pieceType = PieceType.PAWN;
     public Pawn(PieceColor color, Coords position){
         this.color = color;
         this.position = position;

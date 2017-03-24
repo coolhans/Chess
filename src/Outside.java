@@ -6,6 +6,7 @@ public class Outside extends Piece{
     private PieceColor color = PieceColor.NOCOLOR;
     private ArrayList<Coords> movesList = null;
     private Piece movePiece = new None();
+    private PieceType pieceType = PieceType.OUTSIDE;
 
     public Outside(PieceColor color, Coords position){
         this.color = color;
@@ -28,5 +29,8 @@ public class Outside extends Piece{
         return this.color;
     }
 
-
+    @Override
+    public PieceType getPieceType(){
+        return this.pieceType;
+    }
 }

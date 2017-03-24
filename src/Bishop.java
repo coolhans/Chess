@@ -5,7 +5,7 @@ public class Bishop extends Piece {
     private PieceColor color = getPieceColor();
     private ArrayList<Coords> movesList;
     private Piece compPiece = new None();
-
+    private PieceType pieceType = PieceType.BISHOP;
     private Coords upLeft = new Coords(-1,-1);
     private Coords upRight = new Coords(-1,1);
     private Coords downRight = new Coords(1,1);

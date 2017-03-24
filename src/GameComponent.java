@@ -38,6 +38,9 @@ public class GameComponent extends JComponent implements BoardListener {
         enumMapBlack.put(PieceType.BISHOP, new ImageIcon("/images/Bishop.png"));
         enumMapBlack.put(PieceType.QUEEN, new ImageIcon("/images/Queen.png"));
         enumMapBlack.put(PieceType.KING, new ImageIcon("/images/King.png"));
+
+        enumMapBlack.put(PieceType.NONE, new ImageIcon("/images/Blank.jpg"));//image not used, avoid error
+        enumMapBlack.put(PieceType.OUTSIDE, new ImageIcon("/images/Blank.jpg"));//image not used, avoid error
     }
 
     @Override
