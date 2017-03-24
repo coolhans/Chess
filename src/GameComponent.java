@@ -3,29 +3,41 @@ import java.awt.*;
 import java.util.EnumMap;
 
 public class GameComponent extends JComponent implements BoardListener {
+    static int clickedX; //changed by clicking on frame
+    static int clickedY; //changed by clicking on frame
     private final Board board;
-    private EnumMap<Piece, Color> enumMap;
-
+    private EnumMap<PieceType, ImageIcon> enumMapWhite;
+    private EnumMap<PieceType, ImageIcon> enumMapBlack;
+    private ImageIcon img = new ImageIcon();
     public GameComponent(Board board) {
         this.board = board;
 
+        EnumMap<PieceType, ImageIcon> enumMapWhite =  new EnumMap<PieceType, ImageIcon>(PieceType.class);
+        enumMapWhite.put(PieceType.PAWN, new ImageIcon("/images/wPawn.png"));
+        enumMapWhite.put(PieceType.ROOK, new ImageIcon("/images/wRook.png"));
+        enumMapWhite.put(PieceType.KNIGHT, new ImageIcon("/images/wKnight.png"));
+        enumMapWhite.put(PieceType.BISHOP, new ImageIcon("/images/wBishop.png"));
+        enumMapWhite.put(PieceType.QUEEN, new ImageIcon("/images/wQueen.png"));
+        enumMapWhite.put(PieceType.KING, new ImageIcon("/images/wKing.png"));
+       /* enumMap.put(PieceType.BPAWN, new ImageIcon("/images/Pawn.png"));
+        enumMap.put(PieceType.BROOK, new ImageIcon("/images/Rook.png"));
+        enumMap.put(PieceType.BKNIGHT, new ImageIcon("/images/Knight.png"));
+        enumMap.put(PieceType.BBISHOP, new ImageIcon("/images/Bishop.png"));
+        enumMap.put(PieceType.BQUEEN, new ImageIcon("/images/Queen.png"));
+        enumMap.put(PieceType.BKING, new ImageIcon("/images/King.png"));
+        */
+        enumMapWhite.put(PieceType.NONE, new ImageIcon("/images/Blank.jpg"));//image not used, avoid error
+        enumMapWhite.put(PieceType.OUTSIDE, new ImageIcon("/images/Blank.jpg"));//image not used, avoid error
 
-        EnumMap<Piece, Color> enumMap =  new EnumMap<Piece, Color>(Piece.class);
-        enumMap.put(Piece.WPAWN, Color.YELLOW);
-        enumMap.put(Piece.WROOK, Color.GREEN);
-        enumMap.put(Piece.WKNIGHT, Color.PINK);
-        enumMap.put(Piece.WBISHOP, Color.BLUE);
-        enumMap.put(Piece.WQUEEN, Color.RED);
-        enumMap.put(Piece.WKING, Color.ORANGE);
-        enumMap.put(Piece.BPAWN, Color.DARK_GRAY);
-        enumMap.put(Piece.BROOK, Color.DARK_GRAY);
-        enumMap.put(Piece.BKNIGHT, Color.DARK_GRAY);
-        enumMap.put(Piece.BBISHOP, Color.DARK_GRAY);
-        enumMap.put(Piece.BQUEEN, Color.LIGHT_GRAY);
-        enumMap.put(Piece.BKING, Color.CYAN);
+        //this.enumMap = enumMap;
 
-        enumMap.put(Piece.OUTSIDE, Color.LIGHT_GRAY);
-        this.enumMap = enumMap;
+        EnumMap<PieceType, ImageIcon> enumMapBlack =  new EnumMap<PieceType, ImageIcon>(PieceType.class);
+        enumMapBlack.put(PieceType.PAWN, new ImageIcon("/images/Pawn.png"));
+        enumMapBlack.put(PieceType.ROOK, new ImageIcon("/images/Rook.png"));
+        enumMapBlack.put(PieceType.KNIGHT, new ImageIcon("/images/Knight.png"));
+        enumMapBlack.put(PieceType.BISHOP, new ImageIcon("/images/Bishop.png"));
+        enumMapBlack.put(PieceType.QUEEN, new ImageIcon("/images/Queen.png"));
+        enumMapBlack.put(PieceType.KING, new ImageIcon("/images/King.png"));
     }
 
     @Override
@@ -36,34 +48,51 @@ public class GameComponent extends JComponent implements BoardListener {
     }
 
     @Override
-    protected void paintComponent (Graphics g){
-        for (int y = 0; y < board.getWidth() ; y++) {
-            for (int x = 0; x < board.getHeight() ; x++) {
+    //Paint the board.
+    protected void paintComponent (Graphics g) {
+        //super.paintComponent(g);
+        for (int y = 0; y < board.getHeight(); y++) {
+            for (int x = 0; x < board.getWidth(); x++) {
 
-                if(((x+y) % 2)==0) {
-                    g.setColor(Color.WHITE);  //indicates null surface
-                    g.fillRect(y * 50, x * 50, 50, 50);
+                if (((x + y) % 2) == 0) {
+                    g.setColor(Color.WHITE);
+                    g.fillRect(y * 60, x * 60, 60, 60);
+                } else {
+                    g.setColor(Color.LIGHT_GRAY);
+                    g.fillRect(y * 60, x * 60, 60, 60);
+                }
+            }
+        }
+//------Paint the pieces correspondingly, including OUTSIDE.
+        for (int y = 0; y < board.getHeight(); y++) {
+            for (int x = 0; x < board.getWidth(); x++) {
+                Piece piece = board.getPiece(x, y);
+
+                if(board.getPiece(x,y).getPieceColor()==PieceColor.WHITE){
+                    this.img = enumMapWhite.get(piece);
+                }
+
+                else if(board.getPiece(x,y).getPieceColor()==PieceColor.BLACK){
+                    this.img = enumMapBlack.get(piece);
+                }
+
+            if (piece != null) {
+                if (piece.getPieceType() == PieceType.OUTSIDE) {
+                    g.setColor(Color.DARK_GRAY);
+                    g.fillRect(y * 60, x * 60, 60, 60);
+                    //img.paintIcon(this, g, (x * 60), (y * 60));
                 }
                 else {
-                    g.setColor(Color.BLACK);  //indicates null surface
-                    g.fillRect(y * 50, x * 50, 50, 50);
-                }
-
-                Piece piece = board.getPiece(y,x);
-                Color color = enumMap.get(piece);
-                if (color !=null) {
-                    if (piece == Piece.OUTSIDE){
-                        g.setColor(color);
-                        g.fillRect(y * 50, x * 50, 50, 50);
-                    }
-                    else {
-                        g.setColor(color);
-                        g.fillRect(y * 50, x * 50, 40, 40);
+                    //g.setColor(Color.GREEN);
+                    //g.fillRect(y * 50, x * 50, 40, 40);
+                    if (piece.getPieceType() != PieceType.NONE) {
+                        img.paintIcon(this, g, (x * 60), (y * 60));
                     }
                 }
             }
-
         }
+    }
+
     }
 
     @Override
@@ -71,4 +100,11 @@ public class GameComponent extends JComponent implements BoardListener {
         repaint();
 
     }
+
+    //show possible moves
+    public void highlightMoves(){
+        board.getPiece(clickedX,clickedY);
+    }
+
+    //get selected piece
 }

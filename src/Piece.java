@@ -1,6 +1,45 @@
+import java.util.*;
 
-public enum Piece {
-    WPAWN, WROOK, WKNIGHT, WBISHOP, WKING, WQUEEN,
-    BPAWN, BROOK, BKNIGHT, BBISHOP,BKING, BQUEEN,
-    EMPTY, OUTSIDE
+public abstract class Piece {
+    private boolean moved = false;
+    private boolean selected = false;
+    private boolean avaialable;
+
+    private Board board;
+
+    private Coords position;
+    private PieceColor pieceColor;
+    private PieceType pieceType;
+
+
+
+    public abstract ArrayList<Coords> possibleMoves();
+
+    public abstract void Move(Coords coords);
+
+    public boolean isSelected(){
+        return selected;
+    }
+
+    public Coords getPosition(){
+        return position;
+    }
+
+    public PieceColor getPieceColor(){
+        return pieceColor;
+    }
+
+    public boolean hasMoved(){
+        return moved;
+    }
+
+    public Board getBoard(){
+        return board;
+    }
+
+    public PieceType getPieceType(){
+        return pieceType;
+    }
+
 }
+

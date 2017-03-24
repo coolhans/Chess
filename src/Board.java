@@ -9,7 +9,7 @@ public class Board {
     public int height;
     public Piece[][] board;
     private List<BoardListener> listener = new ArrayList<BoardListener>();
-
+    private Piece selectedPiece = new None();
     private static Random random = new Random();
 
     public int getWidth() {  //get width of the board
@@ -23,45 +23,45 @@ public class Board {
     public Board(int height, int width) {  //the board, initiate a board
         this.width = width;
         this.height = height;
-        board = new Piece[height][width];
+        board = new Piece[width][height];
 
         for ( int row = 0; row<height; row++){//makes all squares as OUTSIDE
             for (int column = 0; column<width; column++){
-                board[column][row]= Piece.OUTSIDE;
+                board[column][row]= new Outside(PieceColor.NOCOLOR, new Coords(column,row));
             }
         }
         for ( int row = 1; row<height-1; row++){//makes inner squares as EMPTY
         for (int column = 1; column<width-1; column++){
-                board[column][row]= Piece.EMPTY;
+                board[column][row]= new None();
             }
         }
-        board[1][1] = Piece.BROOK;
-        board[1][2] = Piece.BKNIGHT;
-        board[1][3] = Piece.BBISHOP;
-        board[1][4] = Piece.BQUEEN;
-        board[1][5] = Piece.BKING;
-        board[1][6] = Piece.BBISHOP;
-        board[1][7] = Piece.BKNIGHT;
-        board[1][8] = Piece.BROOK;
+        board[1][1] = new Rook(PieceColor.BLACK, new Coords(1,1));
+        board[2][1] = new Knight(PieceColor.BLACK, new Coords(2,1));
+        board[3][1] = new Bishop(PieceColor.BLACK, new Coords(3,1));
+        board[4][1] = new King(PieceColor.BLACK, new Coords(4,1));
+        board[5][1] = new Queen(PieceColor.BLACK, new Coords(5,1));
+        board[6][1] = new Bishop(PieceColor.BLACK, new Coords(6,1));
+        board[7][1] = new Knight(PieceColor.BLACK, new Coords(7,1));
+        board[8][1] = new Rook(PieceColor.BLACK, new Coords(8,1));
         for (int col = 1;col<width-1;col++){
-            board[2][col] = Piece.BPAWN;
+            board[col][2] = new Pawn(PieceColor.BLACK, new Coords(col,2));
         }
 
-        board[8][1] = Piece.WROOK;
-        board[8][2] = Piece.WKNIGHT;
-        board[8][3] = Piece.WBISHOP;
-        board[8][4] = Piece.WQUEEN;
-        board[8][5] = Piece.WKING;
-        board[8][6] = Piece.WBISHOP;
-        board[8][7] = Piece.WKNIGHT;
-        board[8][8] = Piece.WROOK;
+        board[1][8] = new Rook(PieceColor.WHITE, new Coords(1,8));
+        board[2][8] = new Knight(PieceColor.BLACK, new Coords(2,8));
+        board[3][8] = new Bishop(PieceColor.BLACK, new Coords(3,8));
+        board[4][8] = new King(PieceColor.BLACK, new Coords(4,8));
+        board[5][8] = new Queen(PieceColor.BLACK, new Coords(5,8));
+        board[6][8] = new Bishop(PieceColor.BLACK, new Coords(6,8));
+        board[7][8] = new Knight(PieceColor.BLACK, new Coords(7,8));
+        board[8][8] = new Rook(PieceColor.BLACK, new Coords(8,8));
         for (int col = 1;col<width-1;col++){
-            board[7][col] = Piece.WPAWN;
+            board[col][7] = new Pawn(PieceColor.BLACK, new Coords(col,7));
         }
     }
 
     public Piece getPiece(int x, int y){
-        return board[y][x];
+        return board[x][y];
     }
 
 
@@ -76,16 +76,32 @@ public class Board {
         listener.add(bl);
 
     }
+    //------------------------------------------------------------------------------
+    public void setPiece(int x, int y, Piece piece){
+        board[x][y] = piece;
+    }
 
+    public void removePiece(int x, int y){
+        board[x][y] = new None();
+    }
 
+    public void selectPiece(Piece piece){
+        this.selectedPiece = piece;
+    }
+
+    public Piece getSelectedPiece(){
+        return this.selectedPiece;
+    }
+
+    public void check(){
+
+    }
+    //------------------------------------------------------------------------------
     public void tick(Board myboard){ //function of every tick (timer)
         /*if(){
         }
         else{//
-            this.blockY--;
-            //spiderX++;
             //checkCollision();
-            notifyListeners();
             //do what
         }
         */
