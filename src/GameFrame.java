@@ -54,9 +54,10 @@ public class GameFrame extends JFrame implements MouseListener {
         System.out.println("Mouse Clicked at X: " +x+ " -Y: " + y);
         GameComponent.clickedX = (x / 60);
         GameComponent.clickedY = (y / 60) - 1;
+        Piece selectedPiece = this.board.getPiece(GameComponent.clickedX, GameComponent.clickedY);
         System.out.println("Mouse Clicked at PieceX: "+ GameComponent.clickedX+ " -Y: " + GameComponent.clickedY);
         System.out.println("Selected Piece is: "+ this.board.getPiece(GameComponent.clickedX,GameComponent.clickedY));
-
+        System.out.println("Selected Piece is: "+ selectedPiece.getPieceColor());
         //Piece piece = selectPiece(x,y);
     }
 

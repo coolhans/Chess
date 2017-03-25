@@ -8,6 +8,7 @@ public class GameComponent extends JComponent implements BoardListener {
     private final Board board;
     private EnumMap<PieceType, ImageIcon> enumMapWhite;
     private EnumMap<PieceType, ImageIcon> enumMapBlack;
+    private EnumMap<PieceType, ImageIcon> enumMapNoColor;
     private ImageIcon img = new ImageIcon();
     public GameComponent(Board board) {
         this.board = board;
@@ -38,10 +39,22 @@ public class GameComponent extends JComponent implements BoardListener {
         enumMapBlack.put(PieceType.BISHOP, new ImageIcon("/images/Bishop.png"));
         enumMapBlack.put(PieceType.QUEEN, new ImageIcon("/images/Queen.png"));
         enumMapBlack.put(PieceType.KING, new ImageIcon("/images/King.png"));
+        enumMapBlack.put(PieceType.NONE, new ImageIcon("/images/Blank.jpg"));//image not used, avoid error
+        enumMapBlack.put(PieceType.OUTSIDE, new ImageIcon("/images/Blank.jpg"));//image not used, avoid error
+
+        EnumMap<PieceType, ImageIcon> enumMapNoColor =  new EnumMap<PieceType, ImageIcon>(PieceType.class);
+        enumMapBlack.put(PieceType.PAWN, new ImageIcon("/images/Blank.jpg"));
+        enumMapBlack.put(PieceType.ROOK, new ImageIcon("/images/Blank.jpg"));
+        enumMapBlack.put(PieceType.KNIGHT, new ImageIcon("/images/Blank.jpg"));
+        enumMapBlack.put(PieceType.BISHOP, new ImageIcon("/images/Blank.jpg"));
+        enumMapBlack.put(PieceType.QUEEN, new ImageIcon("/images/Blank.jpg"));
+        enumMapBlack.put(PieceType.KING, new ImageIcon("/images/Blank.jpg"));
 
         enumMapBlack.put(PieceType.NONE, new ImageIcon("/images/Blank.jpg"));//image not used, avoid error
         enumMapBlack.put(PieceType.OUTSIDE, new ImageIcon("/images/Blank.jpg"));//image not used, avoid error
-    }
+}
+
+
 
     @Override
     public Dimension getPreferredSize() {
@@ -66,6 +79,67 @@ public class GameComponent extends JComponent implements BoardListener {
                 }
             }
         }
+
+        for (int y = 0; y < board.getHeight(); y++) {
+            for (int x = 0; x < board.getWidth(); x++) {
+                Piece piece = board.getPiece(x, y);
+
+                if(piece.getPieceType() == PieceType.PAWN && piece.getPieceColor()==PieceColor.WHITE){
+                    img = new ImageIcon("/images/wPawn.png");
+                }
+                else if(piece.getPieceType() == PieceType.ROOK && piece.getPieceColor()==PieceColor.WHITE){
+                    img = new ImageIcon("/images/wRook.png");
+                }
+                else if(piece.getPieceType() == PieceType.KNIGHT && piece.getPieceColor()==PieceColor.WHITE){
+                    img = new ImageIcon("/images/wKnight.png");
+                }
+                else if(piece.getPieceType() == PieceType.BISHOP && piece.getPieceColor()==PieceColor.WHITE){
+                    img = new ImageIcon("/images/wBishop.png");
+                }
+                else if(piece.getPieceType() == PieceType.KING && piece.getPieceColor()==PieceColor.WHITE){
+                    img = new ImageIcon("/images/wKing.png");
+                }
+                else if(piece.getPieceType() == PieceType.QUEEN && piece.getPieceColor()==PieceColor.WHITE){
+                    img = new ImageIcon("/images/wQueen.png");
+                }
+
+                else if(piece.getPieceType() == PieceType.PAWN && piece.getPieceColor()==PieceColor.BLACK){
+                    img = new ImageIcon("/images/Pawn.png");
+                }
+                else if(piece.getPieceType() == PieceType.ROOK && piece.getPieceColor()==PieceColor.BLACK){
+                    img = new ImageIcon("/images/Rook.png");
+                }
+                else if(piece.getPieceType() == PieceType.KNIGHT && piece.getPieceColor()==PieceColor.BLACK){
+                    img = new ImageIcon("/images/Knight.png");
+                }
+                else if(piece.getPieceType() == PieceType.BISHOP && piece.getPieceColor()==PieceColor.BLACK){
+                    img = new ImageIcon("/images/Bishop.png");
+                }
+                else if(piece.getPieceType() == PieceType.KING && piece.getPieceColor()==PieceColor.BLACK){
+                    img = new ImageIcon("/images/King.png");
+                }
+                else if(piece.getPieceType() == PieceType.QUEEN && piece.getPieceColor()==PieceColor.BLACK){
+                    img = new ImageIcon("/images/Queen.png");
+                }
+
+                else if(piece.getPieceType() == PieceType.OUTSIDE && piece.getPieceColor()==PieceColor.NOCOLOR){
+                    img = new ImageIcon("/images/Blank.jpg");
+                    g.setColor(Color.DARK_GRAY);
+                    g.fillRect(y * 60, x * 60, 60, 60);
+                }
+
+                else if(piece.getPieceType() == PieceType.NONE && piece.getPieceColor()==PieceColor.NOCOLOR){
+                    img = new ImageIcon("/images/Blank.jpg");
+                }
+
+                else{
+                    img = new ImageIcon("/images/Blank.jpg");
+                }
+                //img = new ImageIcon("/images/wQueen.png");
+                img.paintIcon(this, g, (x * 60), (y * 60));
+            }
+        }
+        /*
 //------Paint the pieces correspondingly, including OUTSIDE.
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
@@ -79,6 +153,9 @@ public class GameComponent extends JComponent implements BoardListener {
                     this.img = enumMapBlack.get(piece);
                 }
 
+                else if(board.getPiece(x,y).getPieceColor()==PieceColor.NOCOLOR){
+                    this.img = enumMapNoColor.get(piece);
+                }
             if (piece != null) {
                 if (piece.getPieceType() == PieceType.OUTSIDE) {
                     g.setColor(Color.DARK_GRAY);
@@ -94,8 +171,7 @@ public class GameComponent extends JComponent implements BoardListener {
                 }
             }
         }
-    }
-
+        }*/
     }
 
     @Override

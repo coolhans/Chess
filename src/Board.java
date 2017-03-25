@@ -48,15 +48,15 @@ public class Board {
         }
 
         board[1][8] = new Rook(PieceColor.WHITE, new Coords(1,8));
-        board[2][8] = new Knight(PieceColor.BLACK, new Coords(2,8));
-        board[3][8] = new Bishop(PieceColor.BLACK, new Coords(3,8));
-        board[4][8] = new King(PieceColor.BLACK, new Coords(4,8));
-        board[5][8] = new Queen(PieceColor.BLACK, new Coords(5,8));
-        board[6][8] = new Bishop(PieceColor.BLACK, new Coords(6,8));
-        board[7][8] = new Knight(PieceColor.BLACK, new Coords(7,8));
-        board[8][8] = new Rook(PieceColor.BLACK, new Coords(8,8));
+        board[2][8] = new Knight(PieceColor.WHITE, new Coords(2,8));
+        board[3][8] = new Bishop(PieceColor.WHITE, new Coords(3,8));
+        board[4][8] = new King(PieceColor.WHITE, new Coords(4,8));
+        board[5][8] = new Queen(PieceColor.WHITE, new Coords(5,8));
+        board[6][8] = new Bishop(PieceColor.WHITE, new Coords(6,8));
+        board[7][8] = new Knight(PieceColor.WHITE, new Coords(7,8));
+        board[8][8] = new Rook(PieceColor.WHITE, new Coords(8,8));
         for (int col = 1;col<width-1;col++){
-            board[col][7] = new Pawn(PieceColor.BLACK, new Coords(col,7));
+            board[col][7] = new Pawn(PieceColor.WHITE, new Coords(col,7));
         }
     }
 
