@@ -1,20 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.EnumMap;
 
 public class GameComponent extends JComponent implements BoardListener {
     static int clickedX; //changed by clicking on frame
     static int clickedY; //changed by clicking on frame
     private final Board board;
-    private EnumMap<PieceType, ImageIcon> enumMapWhite;
-    private EnumMap<PieceType, ImageIcon> enumMapBlack;
-    private EnumMap<PieceType, ImageIcon> enumMapNoColor;
     private ImageIcon img = new ImageIcon();
     public GameComponent(Board board) {
         this.board = board;
 
 }
-
 
 
     @Override
@@ -27,7 +22,7 @@ public class GameComponent extends JComponent implements BoardListener {
     @Override
     //Paint the board.
     protected void paintComponent (Graphics g) {
-        //super.paintComponent(g);
+        super.paintComponent(g);
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
 
