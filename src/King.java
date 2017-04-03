@@ -8,6 +8,8 @@ public class King extends Piece {
     private Coords tempCoords = new Coords();
     private Piece compPiece = new None();
     private PieceType pieceType = PieceType.KING;
+    private boolean hasMoved = false;
+
     public King(PieceColor color, Coords position){
         this.color = color;
         this.position = position;
@@ -40,13 +42,25 @@ public class King extends Piece {
 
 
     @Override
+    public Coords getPosition(){
+        return this.position;
+    }
+
+
+    @Override
+    public boolean hasMoved(){
+        return this.hasMoved;
+    }
+
+
+    @Override
     public PieceType getPieceType(){
         return PieceType.KING;
     }
 
     @Override
     public void Move(Coords newCoords){
-        getBoard().setPiece(position.getX(),position.getY(), compPiece);
+        this.hasMoved = true;
         this.position.setX(newCoords.getX());
         this.position.setY(newCoords.getY());
     }

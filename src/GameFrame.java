@@ -10,6 +10,9 @@ import javax.swing.JFrame;
 
 public class GameFrame extends JFrame implements MouseListener {
     private Board board;
+    private int clickCounter = 0;
+    private Piece savedSelectedPiece = new None();
+    private Piece currentSelectedPiece = new None();
     public GameFrame(Board board){
         super("Chess");
         setFocusable(true);
@@ -49,16 +52,39 @@ public class GameFrame extends JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e){
-        int x = e.getX();
-        int y = e.getY();
-        System.out.println("Mouse Clicked at X: " +x+ " -Y: " + y);
-        GameComponent.clickedX = (x / 60);
-        GameComponent.clickedY = (y / 60) - 1;
-        Piece selectedPiece = this.board.getPiece(GameComponent.clickedX, GameComponent.clickedY);
-        System.out.println("Mouse Clicked at PieceX: "+ GameComponent.clickedX+ " -Y: " + GameComponent.clickedY);
-        System.out.println("Selected Piece is: "+ this.board.getPiece(GameComponent.clickedX,GameComponent.clickedY));
-        System.out.println("Selected Piece is: "+ selectedPiece.getPieceColor());
-        //Piece piece = selectPiece(x,y);
+        if (e.getX()<600 && e.getY()<660){
+            int x = e.getX();
+            int y = e.getY();
+            System.out.println("Mouse Clicked at X: " +x+ " -Y: " + y);
+            GameComponent.clickedX = (x / 60);
+            GameComponent.clickedY = (y / 60) - 1;
+            this.currentSelectedPiece = this.board.getPiece(GameComponent.clickedX, GameComponent.clickedY);
+            if (currentSelectedPiece.getPieceType() != PieceType.NONE){ //chaos
+                this.clickCounter++;
+                if(clickCounter>1){
+                    //Move
+                    this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
+                    this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
+                    savedSelectedPiece.Move(currentSelectedPiece.getPosition());
+
+
+                    this.clickCounter = 0;
+                }
+                else{
+                    this.savedSelectedPiece = currentSelectedPiece;
+                    savedSelectedPiece.selectPiece();
+                    GameComponent.selectedPiece = savedSelectedPiece;
+                    this.board.selectPiece(savedSelectedPiece);
+                }
+                boardChanged();
+            }
+
+            System.out.println("Mouse Clicked at PieceX: "+ GameComponent.clickedX+ " -Y: " + GameComponent.clickedY);
+            System.out.println("Selected Piece is: "+ this.board.getPiece(GameComponent.clickedX,GameComponent.clickedY));
+
+            System.out.println("Selected Piece is: "+ savedSelectedPiece.getPieceColor());
+            //Piece piece = selectPiece(x,y);
+        }
     }
 
     @Override
@@ -86,12 +112,10 @@ public class GameFrame extends JFrame implements MouseListener {
         int y = e.getY();
         //System.out.println("Mouse Released at X: " +x+ " -Y: " + y);
     }
-    /*
-    @Override
+
     public void boardChanged() {
-        System.out.println("hej");
         repaint();
 
     }
-    */
+
 }

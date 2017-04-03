@@ -10,6 +10,7 @@ public class Queen extends Piece {
     private Coords upRight = new Coords(-1,1);
     private Coords downRight = new Coords(1,1);
     private Coords downLeft = new Coords(1,-1);
+    private boolean hasMoved = false;
     private PieceType pieceType = PieceType.QUEEN;
     public Queen(PieceColor color, Coords position){
         this.color = color;
@@ -329,13 +330,26 @@ public class Queen extends Piece {
     }
 
     @Override
+    public Coords getPosition(){
+        return this.position;
+    }
+
+
+    @Override
+    public boolean hasMoved(){
+        return this.hasMoved;
+    }
+
+
+
+    @Override
     public PieceColor getPieceColor(){
         return this.color;
     }
 
     @Override
     public void Move(Coords newCoords){
-        getBoard().setPiece(position.getX(),position.getY(), new None());
+        this.hasMoved = true;
         this.position.setX(newCoords.getX());
         this.position.setY(newCoords.getY());
     }

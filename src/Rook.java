@@ -7,7 +7,7 @@ public class Rook extends Piece {
     private ArrayList<Coords> movesList;
     private Piece compPiece = new None();
     private PieceType pieceType = PieceType.ROOK;
-
+    private boolean hasMoved = false;
     public Rook(PieceColor color, Coords position){
         this.color = color;
         this.position = position;
@@ -173,6 +173,16 @@ public class Rook extends Piece {
 
         return movesList;
     }
+    @Override
+    public Coords getPosition(){
+        return this.position;
+    }
+
+
+    @Override
+    public boolean hasMoved(){
+        return this.hasMoved;
+    }
 
     @Override
     public PieceType getPieceType(){
@@ -186,7 +196,7 @@ public class Rook extends Piece {
 
     @Override
     public void Move(Coords newCoords){
-        getBoard().setPiece(position.getX(),position.getY(), compPiece);
+        this.hasMoved = true;
         this.position.setX(newCoords.getX());
         this.position.setY(newCoords.getY());
     }

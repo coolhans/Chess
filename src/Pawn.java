@@ -7,6 +7,7 @@ public class Pawn extends Piece{
     private ArrayList<Coords> movesList;
     private Piece compPiece = new None();
     private PieceType pieceType = PieceType.PAWN;
+    private boolean hasMoved = false;
     public Pawn(PieceColor color, Coords position){
         this.color = color;
         this.position = position;
@@ -45,6 +46,16 @@ public class Pawn extends Piece{
     }
 
     @Override
+    public Coords getPosition(){
+        return this.position;
+    }
+
+    @Override
+    public boolean hasMoved(){
+        return this.hasMoved;
+    }
+
+    @Override
     public PieceType getPieceType(){
         return PieceType.PAWN;
     }
@@ -56,7 +67,7 @@ public class Pawn extends Piece{
 
     @Override
     public void Move(Coords newCoords){
-        getBoard().setPiece(position.getX(),position.getY(), new None());
+        this.hasMoved = true;
         this.position.setX(newCoords.getX());
         this.position.setY(newCoords.getY());
     }

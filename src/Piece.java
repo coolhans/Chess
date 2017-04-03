@@ -3,7 +3,7 @@ import java.util.*;
 public abstract class Piece {
     private boolean moved = false;
     private boolean selected = false;
-    private boolean avaialable;
+    private boolean available;
 
     private Board board;
 
@@ -18,18 +18,18 @@ public abstract class Piece {
     public abstract void Move(Coords coords);
 
     public boolean isSelected(){
-        return selected;
+        return this.selected;
     }
 
-    public Coords getPosition(){
-        return position;
+    public void selectPiece(){
+        this.selected = !selected;
     }
+
+    public abstract Coords getPosition();
 
     public abstract PieceColor getPieceColor();
 
-    public boolean hasMoved(){
-        return moved;
-    }
+    public abstract boolean hasMoved();
 
     public Board getBoard(){
         return board;

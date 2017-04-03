@@ -10,6 +10,7 @@ public class Bishop extends Piece {
     private Coords upRight = new Coords(-1,1);
     private Coords downRight = new Coords(1,1);
     private Coords downLeft = new Coords(1,-1);
+    private boolean hasMoved = false;
 
     public Bishop(PieceColor color, Coords position){
         this.color = color;
@@ -172,6 +173,18 @@ public class Bishop extends Piece {
 
     }
 
+
+    @Override
+    public Coords getPosition(){
+        return this.position;
+    }
+
+
+    @Override
+    public boolean hasMoved(){
+        return this.hasMoved;
+    }
+
     @Override
     public PieceType getPieceType(){
         return PieceType.BISHOP;
@@ -179,7 +192,7 @@ public class Bishop extends Piece {
 
     @Override
     public void Move(Coords newCoords){
-        getBoard().setPiece(position.getX(),position.getY(), compPiece);
+        this.hasMoved = true;
         this.position.setX(newCoords.getX());
         this.position.setY(newCoords.getY());
     }

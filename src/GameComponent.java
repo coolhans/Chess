@@ -5,13 +5,12 @@ public class GameComponent extends JComponent implements BoardListener {
     static int clickedX; //changed by clicking on frame
     static int clickedY; //changed by clicking on frame
     private final Board board;
+    public static Piece selectedPiece = new None();
     private ImageIcon img = new ImageIcon();
     public GameComponent(Board board) {
         this.board = board;
 
 }
-
-
     @Override
     public Dimension getPreferredSize() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -36,46 +35,56 @@ public class GameComponent extends JComponent implements BoardListener {
             }
         }
 
+        if (selectedPiece.isSelected()){
+            g.setColor(Color.YELLOW);
+            g.fillRect((clickedX* 60), (clickedY * 60), 60, 60);
+            /*for(int i = 0; i<selectedPiece.possibleMoves().size(); i++) {
+                g.setColor(Color.YELLOW);
+                g.fillRect((selectedPiece.possibleMoves().get(i).getX() * 60), (selectedPiece.possibleMoves().get(i).getY() * 60), 60, 60);
+            }*/
+        }
+
+
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
                 Piece piece = board.getPiece(x, y);
 
                 if(piece.getPieceType() == PieceType.PAWN && piece.getPieceColor()==PieceColor.WHITE){
-                    img = new ImageIcon("/images/wPawn.png");
+                    img = new ImageIcon("./images/wPawn.png");
                 }
                 else if(piece.getPieceType() == PieceType.ROOK && piece.getPieceColor()==PieceColor.WHITE){
-                    img = new ImageIcon("/images/wRook.png");
+                    img = new ImageIcon("./images/wRook.png");
                 }
                 else if(piece.getPieceType() == PieceType.KNIGHT && piece.getPieceColor()==PieceColor.WHITE){
-                    img = new ImageIcon("/images/wKnight.png");
+                    img = new ImageIcon("./images/wKnight.png");
                 }
                 else if(piece.getPieceType() == PieceType.BISHOP && piece.getPieceColor()==PieceColor.WHITE){
-                    img = new ImageIcon("/images/wBishop.png");
+                    img = new ImageIcon("./images/wBishop.png");
                 }
                 else if(piece.getPieceType() == PieceType.KING && piece.getPieceColor()==PieceColor.WHITE){
-                    img = new ImageIcon("/images/wKing.png");
+                    img = new ImageIcon("./images/wKing.png");
                 }
                 else if(piece.getPieceType() == PieceType.QUEEN && piece.getPieceColor()==PieceColor.WHITE){
-                    img = new ImageIcon("/images/wQueen.png");
+                    img = new ImageIcon("./images/wQueen.png");
                 }
 
                 else if(piece.getPieceType() == PieceType.PAWN && piece.getPieceColor()==PieceColor.BLACK){
-                    img = new ImageIcon("/images/Pawn.png");
+                    img = new ImageIcon("./images/Pawn.png");
                 }
                 else if(piece.getPieceType() == PieceType.ROOK && piece.getPieceColor()==PieceColor.BLACK){
-                    img = new ImageIcon("/images/Rook.png");
+                    img = new ImageIcon("./images/Rook.png");
                 }
                 else if(piece.getPieceType() == PieceType.KNIGHT && piece.getPieceColor()==PieceColor.BLACK){
-                    img = new ImageIcon("/images/Knight.png");
+                    img = new ImageIcon("./images/Knight.png");
                 }
                 else if(piece.getPieceType() == PieceType.BISHOP && piece.getPieceColor()==PieceColor.BLACK){
-                    img = new ImageIcon("/images/Bishop.png");
+                    img = new ImageIcon("./images/Bishop.png");
                 }
                 else if(piece.getPieceType() == PieceType.KING && piece.getPieceColor()==PieceColor.BLACK){
-                    img = new ImageIcon("/images/King.png");
+                    img = new ImageIcon("./images/King.png");
                 }
                 else if(piece.getPieceType() == PieceType.QUEEN && piece.getPieceColor()==PieceColor.BLACK){
-                    img = new ImageIcon("/images/Queen.png");
+                    img = new ImageIcon("./images/Queen.png");
                 }
 
                 else if(piece.getPieceType() == PieceType.OUTSIDE && piece.getPieceColor()==PieceColor.NOCOLOR){
@@ -100,13 +109,7 @@ public class GameComponent extends JComponent implements BoardListener {
     @Override
     public void boardChanged() {
         repaint();
-
     }
 
-    //show possible moves
-    public void highlightMoves(){
-        board.getPiece(clickedX,clickedY);
-    }
 
-    //get selected piece
 }

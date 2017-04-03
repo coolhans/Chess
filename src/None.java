@@ -6,6 +6,7 @@ public class None extends Piece{
     private PieceColor color = PieceColor.NOCOLOR;
     private ArrayList<Coords> movesList = null;
     private PieceType pieceType = PieceType.NONE;
+    private boolean hasMoved = false;
     public None(){
         this.color = color;
         this.position = position;
@@ -17,9 +18,20 @@ public class None extends Piece{
 
     @Override
     public void Move(Coords newCoords){
-        //getBoard().setPiece(position.getX(),position.getY(), None());
+        this.hasMoved = true;
         this.position.setX(newCoords.getX());
         this.position.setY(newCoords.getY());
+    }
+
+
+    @Override
+    public Coords getPosition(){
+        return this.position;
+    }
+
+    @Override
+    public boolean hasMoved(){
+        return this.hasMoved;
     }
 
     @Override
