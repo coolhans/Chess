@@ -32,7 +32,7 @@ public class Board {
         }
         for ( int row = 1; row<height-1; row++){//makes inner squares as EMPTY
         for (int column = 1; column<width-1; column++){
-                board[column][row]= new None();
+                board[column][row]= new None(new Coords(column, row));
             }
         }
         board[1][1] = new Rook(PieceColor.BLACK, new Coords(1,1));
@@ -82,7 +82,7 @@ public class Board {
     }
 
     public void removePiece(int x, int y){
-        board[x][y] = new None();
+        board[x][y] = new None(new Coords(x, y));
     }
 
     public void selectPiece(Piece piece){

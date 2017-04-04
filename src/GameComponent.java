@@ -1,9 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GameComponent extends JComponent implements BoardListener {
     static int clickedX; //changed by clicking on frame
     static int clickedY; //changed by clicking on frame
+    static PossibleMoves list;
     private final Board board;
     public static Piece selectedPiece = new None();
     private ImageIcon img = new ImageIcon();
@@ -42,7 +44,15 @@ public class GameComponent extends JComponent implements BoardListener {
                 g.setColor(Color.YELLOW);
                 g.fillRect((selectedPiece.possibleMoves().get(i).getX() * 60), (selectedPiece.possibleMoves().get(i).getY() * 60), 60, 60);
             }*/
+            for(int i=0; i<list.size(); i++){
+                System.out.println("moveslist: " + list.get(i).getX() + ", " + list.get(i).getY());
+                g.setColor(Color.RED);
+                g.fillRect((list.get(i).getX()*60), (list.get(i).getY() * 60), 60, 60);
+            }
+
         }
+
+
 
 
         for (int y = 0; y < board.getHeight(); y++) {
@@ -90,7 +100,7 @@ public class GameComponent extends JComponent implements BoardListener {
                 else if(piece.getPieceType() == PieceType.OUTSIDE && piece.getPieceColor()==PieceColor.NOCOLOR){
                     img = new ImageIcon("/images/Blank.jpg");
                     g.setColor(Color.DARK_GRAY);
-                    g.fillRect(y * 60, x * 60, 60, 60);
+                    g.fillRect(x * 60, y * 60, 60, 60);
                 }
 
                 else if(piece.getPieceType() == PieceType.NONE && piece.getPieceColor()==PieceColor.NOCOLOR){

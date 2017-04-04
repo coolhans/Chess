@@ -4,12 +4,15 @@ public class None extends Piece{
 
     private Coords position = new Coords();
     private PieceColor color = PieceColor.NOCOLOR;
-    private ArrayList<Coords> movesList = null;
+    private ArrayList<Coords> movesList = new ArrayList<Coords>();
     private PieceType pieceType = PieceType.NONE;
     private boolean hasMoved = false;
-    public None(){
-        this.color = color;
+    public None(Coords position){
         this.position = position;
+    }
+
+    public None(){
+
     }
 
     public ArrayList<Coords> possibleMoves(){

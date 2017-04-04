@@ -1,28 +1,71 @@
 import java.util.ArrayList;
 
-public class Rook extends Piece {
-    private Coords position = new Coords();
-    private PieceColor color;
+/**
+ * Created by Christopher on 2017-04-04.
+ */
+public class PossibleMoves {
     private ArrayList<Coords> movesList = new ArrayList<Coords>();
-    private Piece compPiece = new None();
-    private PieceType pieceType = PieceType.ROOK;
-    private boolean hasMoved = false;
-    public Rook(PieceColor color, Coords position){
-        this.color = color;
-        this.position = position;
+    private final Board board;
+
+    public PossibleMoves(Piece piece, Board board){
+        this.board = board;
+        PieceType piecetype = piece.getPieceType();
+        switch(piecetype){
+            case PAWN:
+                PawnMoves(piece);
+                break;
+            case ROOK:
+                RookMoves(piece);
+                break;
+        }
     }
 
-    @Override
-    public ArrayList<Coords> possibleMoves(){
-        //up
+    public PossibleMoves(){
+        this.board = new Board(10,10);
+    }
+
+    private void PawnMoves(Piece piece){
+        PieceColor color = piece.getPieceColor();
+        Coords position = piece.getPosition();
+        switch(color) {
+            case WHITE:
+                for (int i = -1; i < 2; i++)
+                    if (this.board.getPiece(position.getX() + i, position.getY() - 1).getPieceType() != PieceType.NONE && this.board.getPiece(position.getX() + i, position.getY() - 1).getPieceColor() != PieceColor.WHITE && this.board.getPiece(position.getX() + i, position.getY() - 1).getPieceType() != PieceType.OUTSIDE) {
+                        this.movesList.add(new Coords(position.getX() + i, position.getY() - 1));
+                    }
+
+                if (!piece.hasMoved() && this.board.getPiece(position.getX(), position.getY() - 2).getPieceColor() != PieceColor.WHITE && this.board.getPiece(position.getX(), position.getY() - 2).getPieceType() != PieceType.OUTSIDE) {
+                    if (this.board.getPiece(position.getX(), position.getY() - 1).getPieceType() == PieceType.NONE) {
+                        this.movesList.add(new Coords(position.getX(), position.getY() - 2));
+                    }
+                }
+
+
+            case BLACK:
+                for (int i = -1; i < 2; i++)
+                    if (this.board.getPiece(position.getX() + i, position.getY() + 1).getPieceType() != PieceType.NONE && this.board.getPiece(position.getX() + i, position.getY() + 1).getPieceColor() != PieceColor.BLACK) {
+                        this.movesList.add(new Coords(position.getX() + i, position.getY() + 1));
+                    }
+
+                if (!piece.hasMoved() && this.board.getPiece(position.getX(), position.getY() + 2).getPieceColor() != PieceColor.BLACK && this.board.getPiece(position.getX(), position.getY() + 2).getPieceType() != PieceType.OUTSIDE) {
+                    if (this.board.getPiece(position.getX(), position.getY() + 1).getPieceType() == PieceType.NONE) {
+                        this.movesList.add(new Coords(position.getX(), position.getY() + 2));
+                    }
+                }
+        }
+    }
+
+
+
+    private void RookMoves(Piece piece){
+        PieceColor color = piece.getPieceColor();
+        Coords position = piece.getPosition();
         switch(color){
+            //up
             case WHITE:
                 for(int i=1; i<8; i++){
-                    Piece tempPiece = getBoard().getPiece(position.getX(), position.getY()-i);
-                    if(tempPiece.getPieceType() == pieceType.NONE){
-                        break;
-                    }
-                    else if(tempPiece.getPieceColor() == PieceColor.NOCOLOR){
+                    Piece tempPiece = board.getPiece(position.getX(), position.getY()-i);
+                    if(tempPiece.getPieceType() == PieceType.NONE){
                         movesList.add(new Coords(tempPiece.getPosition().getX(),tempPiece.getPosition().getY()));
                     }
                     else if(tempPiece.getPieceColor() == PieceColor.BLACK){
@@ -36,11 +79,8 @@ public class Rook extends Piece {
 
             case BLACK:
                 for(int i=1; i<8; i++){
-                    Piece tempPiece = getBoard().getPiece(position.getX(), position.getY()-i);
-                    if(tempPiece.getPieceType() == pieceType.NONE){
-                        break;
-                    }
-                    else if(tempPiece.getPieceColor() == PieceColor.NOCOLOR){
+                    Piece tempPiece = board.getPiece(position.getX(), position.getY()-i);
+                    if(tempPiece.getPieceType() == PieceType.NONE){
                         movesList.add(new Coords(tempPiece.getPosition().getX(),tempPiece.getPosition().getY()));
                     }
                     else if(tempPiece.getPieceColor() == PieceColor.WHITE){
@@ -56,11 +96,8 @@ public class Rook extends Piece {
         switch(color){
             case WHITE:
                 for(int i=1; i<8; i++){
-                    Piece tempPiece = getBoard().getPiece(position.getX(), position.getY()+i);
-                    if(tempPiece.getPieceType() == pieceType.NONE){
-                        break;
-                    }
-                    else if(tempPiece.getPieceColor() == PieceColor.NOCOLOR){
+                    Piece tempPiece = board.getPiece(position.getX(), position.getY()+i);
+                    if(tempPiece.getPieceType() == PieceType.NONE){
                         movesList.add(new Coords(tempPiece.getPosition().getX(),tempPiece.getPosition().getY()));
                     }
                     else if(tempPiece.getPieceColor() == PieceColor.BLACK){
@@ -74,11 +111,8 @@ public class Rook extends Piece {
 
             case BLACK:
                 for(int i=1; i<8; i++){
-                    Piece tempPiece = getBoard().getPiece(position.getX(), position.getY()+i);
-                    if(tempPiece.getPieceType() == pieceType.NONE){
-                        break;
-                    }
-                    else if(tempPiece.getPieceColor() == PieceColor.NOCOLOR){
+                    Piece tempPiece = board.getPiece(position.getX(), position.getY()+i);
+                    if(tempPiece.getPieceType() == PieceType.NONE){
                         movesList.add(new Coords(tempPiece.getPosition().getX(),tempPiece.getPosition().getY()));
                     }
                     else if(tempPiece.getPieceColor() == PieceColor.WHITE){
@@ -95,11 +129,8 @@ public class Rook extends Piece {
         switch(color){
             case WHITE:
                 for(int i=1; i<8; i++){
-                    Piece tempPiece = getBoard().getPiece(position.getX()-i, position.getY());
-                    if(tempPiece.getPieceType() == pieceType.NONE){
-                        break;
-                    }
-                    else if(tempPiece.getPieceColor() == PieceColor.NOCOLOR){
+                    Piece tempPiece = board.getPiece(position.getX()-i, position.getY());
+                    if(tempPiece.getPieceType() == PieceType.NONE){
                         movesList.add(new Coords(tempPiece.getPosition().getX(),tempPiece.getPosition().getY()));
                     }
                     else if(tempPiece.getPieceColor() == PieceColor.BLACK){
@@ -113,11 +144,9 @@ public class Rook extends Piece {
 
             case BLACK:
                 for(int i=1; i<8; i++){
-                    Piece tempPiece = getBoard().getPiece(position.getX()-i, position.getY());
-                    if(tempPiece.getPieceType() == pieceType.NONE){
-                        break;
-                    }
-                    else if(tempPiece.getPieceColor() == PieceColor.NOCOLOR){
+                    Piece tempPiece = board.getPiece(position.getX()-i, position.getY());
+
+                    if(tempPiece.getPieceType() == PieceType.NONE){
                         movesList.add(new Coords(tempPiece.getPosition().getX(),tempPiece.getPosition().getY()));
                     }
                     else if(tempPiece.getPieceColor() == PieceColor.WHITE){
@@ -134,11 +163,8 @@ public class Rook extends Piece {
         switch(color){
             case WHITE:
                 for(int i=1; i<8; i++){
-                    Piece tempPiece = getBoard().getPiece(position.getX()+i, position.getY());
-                    if(tempPiece.getPieceType() == pieceType.NONE){
-                        break;
-                    }
-                    else if(tempPiece.getPieceColor() == PieceColor.NOCOLOR){
+                    Piece tempPiece = board.getPiece(position.getX()+i, position.getY());
+                    if(tempPiece.getPieceType() == PieceType.NONE){
                         movesList.add(new Coords(tempPiece.getPosition().getX(),tempPiece.getPosition().getY()));
                     }
                     else if(tempPiece.getPieceColor() == PieceColor.BLACK){
@@ -152,11 +178,8 @@ public class Rook extends Piece {
 
             case BLACK:
                 for(int i=1; i<8; i++){
-                    Piece tempPiece = getBoard().getPiece(position.getX()+i, position.getY());
-                    if(tempPiece.getPieceType() == pieceType.NONE){
-                        break;
-                    }
-                    else if(tempPiece.getPieceColor() == PieceColor.NOCOLOR){
+                    Piece tempPiece = board.getPiece(position.getX()+i, position.getY());
+                    if(tempPiece.getPieceType() == PieceType.NONE){
                         movesList.add(new Coords(tempPiece.getPosition().getX(),tempPiece.getPosition().getY()));
                     }
                     else if(tempPiece.getPieceColor() == PieceColor.WHITE){
@@ -168,35 +191,21 @@ public class Rook extends Piece {
                     }
                 }
         }
+    }
 
 
+
+    public int size(){
+        return movesList.size();
+    }
+
+    public Coords get(int index){
+        return movesList.get(index);
+    }
+
+
+    public ArrayList<Coords> getList(){
         return movesList;
     }
-    @Override
-    public Coords getPosition(){
-        return this.position;
-    }
 
-
-    @Override
-    public boolean hasMoved(){
-        return this.hasMoved;
-    }
-
-    @Override
-    public PieceType getPieceType(){
-        return this.pieceType;
-    }
-
-    @Override
-    public PieceColor getPieceColor(){
-        return this.color;
-    }
-
-    @Override
-    public void Move(Coords newCoords){
-        this.hasMoved = true;
-        this.position.setX(newCoords.getX());
-        this.position.setY(newCoords.getY());
-    }
 }

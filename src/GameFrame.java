@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.JFrame;
 
@@ -13,7 +15,7 @@ public class GameFrame extends JFrame implements MouseListener {
     private int clickCounter = 0;
     private Piece savedSelectedPiece = new None();
     private Piece currentSelectedPiece = new None();
-    public GameFrame(Board board){
+        public GameFrame(Board board){
         super("Chess");
         setFocusable(true);
         final GameComponent gameComponent = new GameComponent(board);
@@ -52,6 +54,7 @@ public class GameFrame extends JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e){
+        PossibleMoves list = new PossibleMoves(this.currentSelectedPiece, this.board);
         if (e.getX()<600 && e.getY()<660){
             int x = e.getX();
             int y = e.getY();
@@ -59,7 +62,9 @@ public class GameFrame extends JFrame implements MouseListener {
             GameComponent.clickedX = (x / 60);
             GameComponent.clickedY = (y / 60) - 1;
             this.currentSelectedPiece = this.board.getPiece(GameComponent.clickedX, GameComponent.clickedY);
-            if (currentSelectedPiece.getPieceType() != PieceType.NONE){ //chaos
+
+            //first click on piece
+            if (currentSelectedPiece.getPieceType() != PieceType.NONE && currentSelectedPiece.getPieceType() != PieceType.OUTSIDE){
                 this.clickCounter++;
                 if(clickCounter>1){
                     //Move
@@ -75,16 +80,49 @@ public class GameFrame extends JFrame implements MouseListener {
                     savedSelectedPiece.selectPiece();
                     GameComponent.selectedPiece = savedSelectedPiece;
                     this.board.selectPiece(savedSelectedPiece);
+                    list = new PossibleMoves();
                 }
-                boardChanged();
             }
 
+            //Second click on empty boardspace
+            if (currentSelectedPiece.getPieceType() == PieceType.NONE){
+                if(clickCounter < 1){
+                    this.savedSelectedPiece = new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY()));
+                    GameComponent.selectedPiece = new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY()));
+                    this.board.selectPiece(new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY())));
+                    this.clickCounter = 0;
+                }
+                else if (currentSelectedPiece.getPieceType() != PieceType.OUTSIDE){
+                    this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
+                    this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
+                    savedSelectedPiece.Move(currentSelectedPiece.getPosition());
+                    this.clickCounter = 0;
+
+                }
+
+
+                    //if(not in movelist){
+
+                    //}
+                    //else if(is in movelist){
+                    //   this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
+                    //   this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
+                    //  savedSelectedPiece.Move(currentSelectedPiece.getPosition());
+                    // this.clickCounter = 0;
+                    //
+            }
+            //PossibleMoves list = new PossibleMoves(currentSelectedPiece, this.board);
             System.out.println("Mouse Clicked at PieceX: "+ GameComponent.clickedX+ " -Y: " + GameComponent.clickedY);
             System.out.println("Selected Piece is: "+ this.board.getPiece(GameComponent.clickedX,GameComponent.clickedY));
 
-            System.out.println("Selected Piece is: "+ savedSelectedPiece.getPieceColor());
+            GameComponent.list = list;
+            for(int i=0; i<list.getList().size(); i++){
+                System.out.println("moveslist: " + list.getList().get(i).getX() + ", " + list.getList().get(i).getY());
+            }
+            System.out.println("Selected Piece is: "+ currentSelectedPiece.getPieceColor());
             //Piece piece = selectPiece(x,y);
         }
+        boardChanged();
     }
 
     @Override
