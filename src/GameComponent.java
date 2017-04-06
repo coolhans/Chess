@@ -37,7 +37,7 @@ public class GameComponent extends JComponent implements BoardListener {
             }
         }
 
-        if (selectedPiece.isSelected()){
+        if (selectedPiece.isSelected() && selectedPiece.getPieceType() != PieceType.NONE){
             g.setColor(Color.YELLOW);
             g.fillRect((clickedX* 60), (clickedY * 60), 60, 60);
             /*for(int i = 0; i<selectedPiece.possibleMoves().size(); i++) {
@@ -51,9 +51,6 @@ public class GameComponent extends JComponent implements BoardListener {
             }
 
         }
-
-
-
 
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {

@@ -1,3 +1,5 @@
+import javafx.geometry.Pos;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +18,7 @@ public class GameFrame extends JFrame implements MouseListener {
     private Piece savedSelectedPiece = new None();
     private Piece currentSelectedPiece = new None();
     private PossibleMoves list = new PossibleMoves();
+    private PossibleMoves checkList = new PossibleMoves();
         public GameFrame(Board board){
         super("Chess");
         setFocusable(true);
@@ -62,60 +65,104 @@ public class GameFrame extends JFrame implements MouseListener {
             GameComponent.clickedX = (x / 60);
             GameComponent.clickedY = (y / 60) - 1;
             this.currentSelectedPiece = this.board.getPiece(GameComponent.clickedX, GameComponent.clickedY);
+            this.list = new PossibleMoves();
             this.list = new PossibleMoves(this.currentSelectedPiece, this.board);
+
             //first click on piece
             if (currentSelectedPiece.getPieceType() != PieceType.NONE && currentSelectedPiece.getPieceType() != PieceType.OUTSIDE){
                 this.clickCounter++;
-                if(clickCounter>1){ //&& this.list.contains(currentSelectedPiece.getPosition())
-                    //Move
-                    this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
-                    this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
-                    savedSelectedPiece.Move(currentSelectedPiece.getPosition());
+                if(clickCounter>1){
+                    for(int i=0; i<checkList.getList().size(); i++){
+                        if(checkList.get(i).getX() == currentSelectedPiece.getPosition().getX() && checkList.get(i).getY() == currentSelectedPiece.getPosition().getY()){
+                            //Move
+                            this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
+                            this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
+                            savedSelectedPiece.Move(currentSelectedPiece.getPosition());
+                            GameComponent.selectedPiece.selectPiece();
+                            this.list = new PossibleMoves();
+                            this.checkList = new PossibleMoves();
+                            this.clickCounter = 0;
+                            System.out.println("cCOUNTER @ MOVE: " + clickCounter);
+                        }
+                        else if(!(checkList.get(i).getX() == currentSelectedPiece.getPosition().getX() && checkList.get(i).getY() == currentSelectedPiece.getPosition().getY())){
+                            //Try to move on position not allowed
+                            this.savedSelectedPiece = new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY()));
+                            GameComponent.selectedPiece = new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY()));
+                            this.board.selectPiece(new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY())));
+                            this.clickCounter = 0;
+                            this.list = new PossibleMoves();
+                            System.out.println("cCOUNTER @ TRY NOT ALLOWED: " + clickCounter);
+                        }
+                        else{
+                            System.out.println("cCOUNTER @ bug: " + clickCounter);
+                        }
 
+                    }
 
-                    this.clickCounter = 0;
                 }
                 else{
+                    //Press and select piece
                     this.savedSelectedPiece = currentSelectedPiece;
                     savedSelectedPiece.selectPiece();
                     GameComponent.selectedPiece = savedSelectedPiece;
                     this.board.selectPiece(savedSelectedPiece);
-
+                    GameComponent.list = this.list;
+                    this.checkList = new PossibleMoves(this.savedSelectedPiece, this.board);
+                    for(int i=0; i<checkList.getList().size(); i++){
+                        System.out.println("checklist element: " + checkList.getList().get(i).getX() + ", " + checkList.getList().get(i).getY());
+                    }
+                    System.out.println("cCOUNTER @ select piece: " + clickCounter);
                 }
             }
 
-            //Second click on empty boardspace
+            //click on empty boardspace
             if (currentSelectedPiece.getPieceType() == PieceType.NONE){
                 if(clickCounter < 1){
+                    //Deselect
                     this.savedSelectedPiece = new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY()));
                     GameComponent.selectedPiece = new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY()));
                     this.board.selectPiece(new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY())));
                     this.clickCounter = 0;
+                    this.list = new PossibleMoves();
+                    GameComponent.list = this.list;
+                    this.checkList = new PossibleMoves();
+                    System.out.println("cCOUNTER @ empty board1: " + clickCounter);
                 }
                 else if (currentSelectedPiece.getPieceType() != PieceType.OUTSIDE){ //&& this.list.contains(currentSelectedPiece.getPosition())
-                    this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
-                    this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
-                    savedSelectedPiece.Move(currentSelectedPiece.getPosition());
-                    this.clickCounter = 0;
+                    System.out.println("cCOUNTER @ empty board2: " + clickCounter);
+                    //Move to empty spot
+                    System.out.println("Current piece: " + this.currentSelectedPiece);
+                    for(int i=0; i<checkList.getList().size(); i++){
+                        System.out.println("checklist element222: " + checkList.getList().get(i).getX() + ", " + checkList.getList().get(i).getY());
+                        if(checkList.get(i).getX() == currentSelectedPiece.getPosition().getX() && checkList.get(i).getY() == currentSelectedPiece.getPosition().getY()){
+                            this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
+                            this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
+                            savedSelectedPiece.Move(currentSelectedPiece.getPosition());
+                            GameComponent.selectedPiece.selectPiece();
+                            this.clickCounter = 0;
+                            this.list = new PossibleMoves();
+                            GameComponent.list = this.list;
+                            this.checkList = new PossibleMoves();
+                            System.out.println("cCOUNTER @ empty board3: " + clickCounter);
+                            break;
+                        }
+                        else if(i==checkList.getList().size()-1){
+                            this.savedSelectedPiece = new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY()));
+                            GameComponent.selectedPiece = new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY()));
+                            this.board.selectPiece(new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY())));
+                            this.clickCounter = 0;
+                            this.list = new PossibleMoves();
+                            GameComponent.list = this.list;
+                            this.checkList = new PossibleMoves();
+                        }
+                    }
+                  //  if(this.checkList.contains(currentSelectedPiece.getPosition())){
 
+                  //  }
                 }
-
-
-                    //if(not in movelist){
-
-                    //}
-                    //else if(is in movelist){
-                    //   this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
-                    //   this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
-                    //  savedSelectedPiece.Move(currentSelectedPiece.getPosition());
-                    // this.clickCounter = 0;
-                    //
             }
-            //PossibleMoves list = new PossibleMoves(currentSelectedPiece, this.board);
-            System.out.println("Mouse Clicked at PieceX: "+ GameComponent.clickedX+ " -Y: " + GameComponent.clickedY);
             System.out.println("Selected Piece is: "+ this.board.getPiece(GameComponent.clickedX,GameComponent.clickedY));
-
-            GameComponent.list = this.list;
+            System.out.println("Selected Piece is: "+ this.board.getPiece(GameComponent.clickedX,GameComponent.clickedY).getPosition());
             for(int i=0; i<list.getList().size(); i++){
                 System.out.println("moveslist: " + list.getList().get(i).getX() + ", " + list.getList().get(i).getY());
             }
