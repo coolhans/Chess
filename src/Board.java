@@ -11,6 +11,7 @@ public class Board {
     private List<BoardListener> listener = new ArrayList<BoardListener>();
     private Piece selectedPiece = new None();
     private static Random random = new Random();
+    private static int turn = 0;
 
     public int getWidth() {  //get width of the board
         return width;
@@ -87,6 +88,15 @@ public class Board {
 
     public void selectPiece(Piece piece){
         this.selectedPiece = piece;
+    }
+
+
+    public static int getTurn(){
+        return turn;
+    }
+
+    public void nextTurn(){
+        this.turn = turn +1;
     }
 
     public Piece getSelectedPiece(){

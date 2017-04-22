@@ -8,11 +8,22 @@ public class GameComponent extends JComponent implements BoardListener {
     static PossibleMoves list;
     private final Board board;
     public static Piece selectedPiece = new None();
+    public static String turnLabelValue = "White";
     private ImageIcon img = new ImageIcon();
     public GameComponent(Board board) {
         this.board = board;
 
-}
+    }
+
+    public static void changeTurnLabel(int turn){
+        if(turn%2==0){
+            turnLabelValue = "White";
+
+        }
+        else if(turn%2==1){
+            turnLabelValue = "Black";
+        }
+    }
     @Override
     public Dimension getPreferredSize() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
