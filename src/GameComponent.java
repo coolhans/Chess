@@ -8,22 +8,13 @@ public class GameComponent extends JComponent implements BoardListener {
     static PossibleMoves list;
     private final Board board;
     public static Piece selectedPiece = new None();
-    public static String turnLabelValue = "White";
+    static ArrayList<Coords> checkPieces = new ArrayList<Coords>();
     private ImageIcon img = new ImageIcon();
     public GameComponent(Board board) {
         this.board = board;
 
     }
 
-    public static void changeTurnLabel(int turn){
-        if(turn%2==0){
-            turnLabelValue = "White";
-
-        }
-        else if(turn%2==1){
-            turnLabelValue = "Black";
-        }
-    }
     @Override
     public Dimension getPreferredSize() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -35,15 +26,22 @@ public class GameComponent extends JComponent implements BoardListener {
     //Paint the board.
     protected void paintComponent (Graphics g) {
         super.paintComponent(g);
-        for (int y = 0; y < board.getHeight(); y++) {
-            for (int x = 0; x < board.getWidth(); x++) {
+        for (int x = 0; x < board.getWidth(); x++) {
+            for (int y = 0; y < board.getHeight(); y++) {
 
                 if (((x + y) % 2) == 0) {
                     g.setColor(Color.WHITE);
-                    g.fillRect(y * 60, x * 60, 60, 60);
+                    g.fillRect(x * 60, y * 60, 60, 60);
                 } else {
                     g.setColor(Color.LIGHT_GRAY);
-                    g.fillRect(y * 60, x * 60, 60, 60);
+                    g.fillRect(x * 60, y * 60, 60, 60);
+                }
+
+                for (int i = 0; i < checkPieces.size(); i++) {
+                    if (checkPieces.get(i).getY() == y && checkPieces.get(i).getX() == x) {
+                        g.setColor(Color.PINK);
+                        g.fillRect(x * 60,y * 60, 60, 60);
+                    }
                 }
             }
         }
@@ -62,6 +60,7 @@ public class GameComponent extends JComponent implements BoardListener {
             }
 
         }
+
 
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {

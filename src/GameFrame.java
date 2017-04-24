@@ -19,6 +19,10 @@ public class GameFrame extends JFrame implements MouseListener {
     private Piece currentSelectedPiece = new None();
     private PossibleMoves list = new PossibleMoves();
     private PossibleMoves checkList = new PossibleMoves();
+    private JLabel playerLabel;
+    private JLabel checkLabel;
+    private ArrayList<Coords> checkPieces = new ArrayList<Coords>();
+    private boolean checkState = false;
 
     public GameFrame(Board board){
         super("Chess");
@@ -29,21 +33,20 @@ public class GameFrame extends JFrame implements MouseListener {
         this.add(gameComponent,BorderLayout.CENTER);
         this.board = board;
 
-        final JLabel scoreLabel = new JLabel("Player: ");
-        this.add(scoreLabel,BorderLayout.NORTH);
+        playerLabel = new JLabel("Player: White");
+        this.add(playerLabel,BorderLayout.NORTH);
+
+        checkLabel = new JLabel("");
+        this.add(checkLabel,BorderLayout.SOUTH);
+
+
 
         createMenu();
         this.pack();
         this.setVisible(true);
         addMouseListener(this);
-        final Action updateLabel = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                scoreLabel.setText("Player: " + Board.getTurn());
-                gameComponent.boardChanged();
-            }
-        };
     }
+
 
     private void createMenu(){
         final JMenu file = new JMenu("File");
@@ -64,6 +67,23 @@ public class GameFrame extends JFrame implements MouseListener {
         this.setJMenuBar(bar);
     }
 
+
+    public void updateLabel() {
+        if(this.board.getTurn()%2==0){
+            playerLabel.setText("Player: Black");
+        }
+        else if(this.board.getTurn()%2==1){
+            playerLabel.setText("Player: White");
+        }
+        if(checkState){
+            checkLabel.setText("Check");
+        }
+        if(!checkState){
+            checkLabel.setText("");
+        }
+        boardChanged();
+    }
+
     @Override
     public void mouseClicked(MouseEvent e){
         if (e.getX()<600 && e.getY()<660){
@@ -75,6 +95,99 @@ public class GameFrame extends JFrame implements MouseListener {
             this.currentSelectedPiece = this.board.getPiece(GameComponent.clickedX, GameComponent.clickedY);
             this.list = new PossibleMoves();
             this.list = new PossibleMoves(this.currentSelectedPiece, this.board);
+
+            //Remove non eligeble moves from Kings possible moves list
+            if(currentSelectedPiece.getPieceType()==PieceType.KING){
+                ArrayList<Coords> removedCoords = new ArrayList<Coords>();
+                for(int i=1; i<9; i++) {
+                    for (int j = 1; j < 9; j++) {
+                        if (currentSelectedPiece.getPieceColor() == PieceColor.WHITE) {
+                            if (this.board.getPiece(j, i).getPieceColor() == PieceColor.BLACK){
+                                if(this.board.getPiece(j, i).getPieceType() != PieceType.PAWN){
+                                    PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j, i), this.board);
+                                    for(int k=0; k<this.list.size(); k++){
+                                        for(int l=0; l<tempList.size(); l++){
+                                            if(tempList.get(l).getX()==this.list.get(k).getX() && tempList.get(l).getY()==this.list.get(k).getY() && !removedCoords.contains(this.list.get(k))){
+                                                removedCoords.add(this.list.get(k));
+                                                this.list.remove(k);
+                                                if(k!=0){
+                                                    k= k-1;
+                                                }
+                                                else{
+                                                    k=0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                //Check with enemy pawns
+                                else{
+                                    for(int k=0; k<this.list.size(); k++){
+                                        for (int p = -1; p < 2; p++){
+                                            if(p!=0 && this.board.getPiece(this.board.getPiece(j, i).getPosition().getX()+p, this.board.getPiece(j, i).getPosition().getY()+1).getPieceType() != PieceType.OUTSIDE){
+                                                if(this.list.get(k).getX()== this.board.getPiece(j, i).getPosition().getX()+p && this.list.get(k).getY()== this.board.getPiece(j, i).getPosition().getY()+1 && !removedCoords.contains(this.list.get(k))){
+                                                    removedCoords.add(this.list.get(k));
+                                                    this.list.remove(k);
+                                                    if(k!=0){
+                                                        k= k-1;
+                                                    }
+                                                    else{
+                                                        k=0;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        else if (currentSelectedPiece.getPieceColor() == PieceColor.BLACK) {
+                            if (this.board.getPiece(j, i).getPieceColor() == PieceColor.WHITE) {
+                                if(this.board.getPiece(j, i).getPieceType() != PieceType.PAWN){
+                                    PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j, i), this.board);
+                                    for(int k=0; k<this.list.size(); k++){
+                                        for(int l=0; l<tempList.size(); l++){
+                                            if(tempList.get(l).getX()==this.list.get(k).getX() && tempList.get(l).getY()==this.list.get(k).getY() && !removedCoords.contains(this.list.get(k))){
+                                                removedCoords.add(this.list.get(k));
+                                                this.list.remove(k);
+                                                if(k!=0){
+                                                    k= k-1;
+                                                }
+                                                else{
+                                                    k=0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                //Check with enemy pawns
+                                else{
+                                    for(int k=0; k<this.list.size(); k++){
+                                        for (int p = -1; p < 2; p++){
+                                            if(p!=0 && this.board.getPiece(this.board.getPiece(j, i).getPosition().getX()+p, this.board.getPiece(j, i).getPosition().getY()+1).getPieceType() != PieceType.OUTSIDE){
+                                                if(this.list.get(k).getX()== this.board.getPiece(j, i).getPosition().getX()+p && this.list.get(k).getY()== this.board.getPiece(j, i).getPosition().getY()-1 && !removedCoords.contains(this.list.get(k))){
+                                                    removedCoords.add(this.list.get(k));
+                                                    this.list.remove(k);
+                                                    if(k!=0){
+                                                        k= k-1;
+                                                    }
+                                                    else{
+                                                        k=0;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            //Player Label
             if(this.board.getTurn()%2==0){
                 clickFunc(PieceColor.WHITE);
                 System.out.println("TurnCounter: " + this.board.getTurn());
@@ -95,14 +208,32 @@ public class GameFrame extends JFrame implements MouseListener {
                 for(int i=0; i<checkList.getList().size(); i++){
                     if(checkList.get(i).getX() == currentSelectedPiece.getPosition().getX() && checkList.get(i).getY() == currentSelectedPiece.getPosition().getY()){
                         //Move
-                        this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
-                        this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
-                        savedSelectedPiece.Move(currentSelectedPiece.getPosition());
-                        GameComponent.selectedPiece.selectPiece();
-                        //updateLabel();
-                        this.board.nextTurn();
-                        clearPiece();
-                        System.out.println("cCOUNTER @ MOVE: " + clickCounter);
+                        if(checkSelfCheck(savedSelectedPiece, currentSelectedPiece)){
+                            this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
+                            this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
+                            savedSelectedPiece.Move(currentSelectedPiece.getPosition());
+                            GameComponent.selectedPiece.selectPiece();
+
+                            this.board.nextTurn();
+
+                            System.out.println("cCOUNTER @ MOVE: " + clickCounter);
+
+                            if(checkEnemyCheck(savedSelectedPiece)){
+                                GameComponent.checkPieces = this.checkPieces;
+                                this.checkPieces = new ArrayList<Coords>();
+                            }
+                            else if(!checkEnemyCheck(savedSelectedPiece)){
+                                this.checkPieces = new ArrayList<Coords>();
+                                GameComponent.checkPieces = this.checkPieces;
+                                this.checkState = false;
+                            }
+                            updateLabel();
+                            clearPiece();
+                        }
+                        else if(!checkSelfCheck(savedSelectedPiece, currentSelectedPiece)){
+                            clearPiece();
+                            break;
+                        }
                     }
 
                     else if(i==checkList.getList().size()-1){
@@ -147,14 +278,37 @@ public class GameFrame extends JFrame implements MouseListener {
                 System.out.println("Current piece: " + this.currentSelectedPiece);
                 for(int i=0; i<checkList.getList().size(); i++){
                     if(checkList.get(i).getX() == currentSelectedPiece.getPosition().getX() && checkList.get(i).getY() == currentSelectedPiece.getPosition().getY()){
-                        this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
-                        this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
-                        savedSelectedPiece.Move(currentSelectedPiece.getPosition());
-                        GameComponent.selectedPiece.selectPiece();
-                        GameComponent.changeTurnLabel(this.board.getTurn());
-                        this.board.nextTurn();
-                        clearPiece();
-                        break;
+                        if(checkSelfCheck(savedSelectedPiece, currentSelectedPiece)){
+                            System.out.println("An OK move...");
+                            this.board.setPiece(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY(), savedSelectedPiece);
+                            this.board.removePiece(savedSelectedPiece.getPosition().getX(), savedSelectedPiece.getPosition().getY());
+                            savedSelectedPiece.Move(currentSelectedPiece.getPosition());
+                            GameComponent.selectedPiece.selectPiece();
+
+                            this.board.nextTurn();
+
+
+                            if(checkEnemyCheck(savedSelectedPiece)){
+                                GameComponent.checkPieces = this.checkPieces;
+                                this.checkPieces = new ArrayList<Coords>();
+                            }
+                            else if(!checkEnemyCheck(savedSelectedPiece)){
+                                this.checkPieces = new ArrayList<Coords>();
+                                GameComponent.checkPieces = this.checkPieces;
+                                this.checkState = false;
+                            }
+                            updateLabel();
+                            clearPiece();
+                            break;
+                        }
+                        else if(!checkSelfCheck(savedSelectedPiece, currentSelectedPiece)){
+                            System.out.println("NOT an OK move...");
+                            clearPiece();
+                            break;
+                        }
+
+
+
                     }
                     else if(i==checkList.getList().size()-1){
                         clearPiece();
@@ -167,6 +321,73 @@ public class GameFrame extends JFrame implements MouseListener {
             System.out.println("We are on ELSE case: " + clickCounter);
         }
         System.out.println("Clickcounter: " + this.clickCounter);
+    }
+
+    private boolean checkEnemyCheck(Piece piece){
+        boolean returnValue = false;
+        for(int i=1; i<9; i++) {
+            for(int j=1; j<9; j++) {
+                if(this.board.getPiece(j,i).getPieceColor() == piece.getPieceColor()){
+                    PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j, i), this.board);
+                    for(int k=0; k<tempList.size(); k++){
+                        if(this.board.getPiece(tempList.get(k).getX(), tempList.get(k).getY()).getPieceType() == PieceType.KING){
+                            this.checkState = true;
+                            returnValue = true;
+                            if(!checkPieces.contains(tempList.get(k))){
+                                this.checkPieces.add(tempList.get(k));
+                            }
+                            if(!checkPieces.contains(new Coords(j,i))){
+                                this.checkPieces.add(new Coords(j,i));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return returnValue;
+    }
+
+    private boolean checkSelfCheck(Piece piece, Piece movePiece){
+        //Temporarily ignore selected piece
+        Piece savePiece = this.board.getPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY());
+        this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), new None());
+        this.board.setPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY(), piece);
+        //Tempo....
+        for(int i=1; i<9; i++){
+            for(int j=1; j<9; j++){
+                if(piece.getPieceColor() == PieceColor.WHITE){
+                    if(this.board.getPiece(j,i).getPieceColor() == PieceColor.BLACK){
+                        PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j,i), this.board);
+                        for(int k=0; k<tempList.getList().size(); k++){
+                            if (this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()).getPieceType() == PieceType.KING  && this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()).getPieceColor() == PieceColor.WHITE){
+                                this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), piece);
+                                this.board.setPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY(), savePiece);
+                                System.out.println("CheckSelfCheck: list for piece: x= " + i + ", y=" + j);
+                                System.out.println("CheckSelfCheck: x= " + tempList.get(k).getX() + ", y= "+ tempList.get(k).getY());
+                                return false;
+                            }
+                        }
+                    }
+                }
+                else if(piece.getPieceColor() == PieceColor.BLACK){
+                    if(this.board.getPiece(j,i).getPieceColor() == PieceColor.WHITE){
+                        PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j,i), this.board);
+                        for(int k=0; k<tempList.getList().size(); k++){
+                            if (this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()).getPieceType() == PieceType.KING && this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()).getPieceColor() == PieceColor.BLACK){
+                                this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), piece);
+                                this.board.setPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY(), savePiece);
+                                System.out.println("CheckSelfCheck: list for piece: x= " + i + ", y=" + j);
+                                System.out.println("CheckSelfCheck: King pos: x= " + tempList.get(k).getX() + ", y= "+ tempList.get(k).getY());
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), piece);
+        this.board.setPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY(), savePiece);
+        return true;
     }
 
 

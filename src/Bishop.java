@@ -7,9 +7,9 @@ public class Bishop extends Piece {
     private Piece compPiece = new None();
     private PieceType pieceType = PieceType.BISHOP;
     private Coords upLeft = new Coords(-1,-1);
-    private Coords upRight = new Coords(-1,1);
+    private Coords upRight = new Coords(1,-1);
     private Coords downRight = new Coords(1,1);
-    private Coords downLeft = new Coords(1,-1);
+    private Coords downLeft = new Coords(-1,1);
     private boolean hasMoved = false;
 
     public Bishop(PieceColor color, Coords position){

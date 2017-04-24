@@ -8,9 +8,9 @@ public class PossibleMoves {
     private final Board board;
 
     private Coords upLeft = new Coords(-1,-1);
-    private Coords upRight = new Coords(-1,1);
+    private Coords upRight = new Coords(1,-1);
     private Coords downRight = new Coords(1,1);
-    private Coords downLeft = new Coords(1,-1);
+    private Coords downLeft = new Coords(-1,1);
 
 
     public PossibleMoves(Piece piece, Board board){
@@ -253,10 +253,14 @@ public class PossibleMoves {
                         movesList.add(new Coords(position.getX()+i*upRight.getX(),position.getY()+i*upRight.getY()));
                         break;
                     }
-                    else{
+                    else if (tempPiece.getPieceColor() == PieceColor.WHITE){
                         break; //maybe check piececolor.white
                     }
+                    else{
+                        break;
+                    }
                 }
+                break;
             case BLACK:
                 for(int i=1; i<8; i++){
                     Piece tempPiece = board.getPiece(position.getX()+i*upRight.getX(), position.getY()+i*upRight.getY());
@@ -274,6 +278,7 @@ public class PossibleMoves {
                         break; //maybe check piececolor.white
                     }
                 }
+                break;
         }
         //Check available moves diagonal down right
         switch(color) {
@@ -290,10 +295,14 @@ public class PossibleMoves {
                         movesList.add(new Coords(position.getX()+i*downRight.getX(),position.getY()+i*downRight.getY()));
                         break;
                     }
-                    else{
+                    else if (tempPiece.getPieceColor() == PieceColor.WHITE){
                         break; //maybe check piececolor.white
                     }
+                    else{
+                        break;
+                    }
                 }
+                break;
             case BLACK:
                 for(int i=1; i<8; i++){
                     Piece tempPiece = board.getPiece(position.getX()+i*downRight.getX(), position.getY()+i*downRight.getY());
@@ -311,6 +320,7 @@ public class PossibleMoves {
                         break; //maybe check piececolor.white
                     }
                 }
+                break;
         }
 
         //Check available moves diagonal down left
@@ -328,10 +338,14 @@ public class PossibleMoves {
                         movesList.add(new Coords(position.getX()+i*downLeft.getX(),position.getY()+i*downLeft.getY()));
                         break;
                     }
-                    else{
+                    else if (tempPiece.getPieceColor() == PieceColor.WHITE){
                         break; //maybe check piececolor.white
                     }
+                    else{
+                        break;
+                    }
                 }
+                break;
             case BLACK:
                 for(int i=1; i<8; i++){
                     Piece tempPiece = board.getPiece(position.getX()+i*downLeft.getX(), position.getY()+i*downLeft.getY());
@@ -349,6 +363,7 @@ public class PossibleMoves {
                         break; //maybe check piececolor.white
                     }
                 }
+                break;
         }
 
         //Check available moves diagonal up left
@@ -366,10 +381,14 @@ public class PossibleMoves {
                         movesList.add(new Coords(position.getX()+i*upLeft.getX(),position.getY()+i*upLeft.getY()));
                         break;
                     }
-                    else{
+                    else if (tempPiece.getPieceColor() == PieceColor.WHITE){
                         break; //maybe check piececolor.white
                     }
+                    else{
+                        break;
+                    }
                 }
+                break;
             case BLACK:
                 for(int i=1; i<8; i++){
                     Piece tempPiece = board.getPiece(position.getX()+i*upLeft.getX(), position.getY()+i*upLeft.getY());
@@ -387,6 +406,7 @@ public class PossibleMoves {
                         break; //maybe check piececolor.white
                     }
                 }
+                break;
         }
     }
 
@@ -504,8 +524,8 @@ public class PossibleMoves {
                     }
                 }
                 break;
-            //removeCheckPosFromList();
         }
+        //removeCheckPosFromList(piece);
     }
 
     private void QueenMoves(Piece piece){
@@ -669,10 +689,14 @@ public class PossibleMoves {
                         movesList.add(new Coords(position.getX()+i*upRight.getX(),position.getY()+i*upRight.getY()));
                         break;
                     }
-                    else{
+                    else if (tempPiece.getPieceColor() == PieceColor.WHITE){
                         break; //maybe check piececolor.white
                     }
+                    else{
+                        break;
+                    }
                 }
+                break;
             case BLACK:
                 for(int i=1; i<8; i++){
                     Piece tempPiece = board.getPiece(position.getX()+i*upRight.getX(), position.getY()+i*upRight.getY());
@@ -690,6 +714,7 @@ public class PossibleMoves {
                         break; //maybe check piececolor.white
                     }
                 }
+                break;
         }
         //Check available moves diagonal down right
         switch(color) {
@@ -706,10 +731,14 @@ public class PossibleMoves {
                         movesList.add(new Coords(position.getX()+i*downRight.getX(),position.getY()+i*downRight.getY()));
                         break;
                     }
-                    else{
+                    else if (tempPiece.getPieceColor() == PieceColor.WHITE){
                         break; //maybe check piececolor.white
                     }
+                    else{
+                        break;
+                    }
                 }
+                break;
             case BLACK:
                 for(int i=1; i<8; i++){
                     Piece tempPiece = board.getPiece(position.getX()+i*downRight.getX(), position.getY()+i*downRight.getY());
@@ -727,6 +756,7 @@ public class PossibleMoves {
                         break; //maybe check piececolor.white
                     }
                 }
+                break;
         }
 
         //Check available moves diagonal down left
@@ -744,10 +774,14 @@ public class PossibleMoves {
                         movesList.add(new Coords(position.getX()+i*downLeft.getX(),position.getY()+i*downLeft.getY()));
                         break;
                     }
-                    else{
+                    else if (tempPiece.getPieceColor() == PieceColor.WHITE){
                         break; //maybe check piececolor.white
                     }
+                    else{
+                        break;
+                    }
                 }
+                break;
             case BLACK:
                 for(int i=1; i<8; i++){
                     Piece tempPiece = board.getPiece(position.getX()+i*downLeft.getX(), position.getY()+i*downLeft.getY());
@@ -765,6 +799,7 @@ public class PossibleMoves {
                         break; //maybe check piececolor.white
                     }
                 }
+                break;
         }
 
         //Check available moves diagonal up left
@@ -782,10 +817,14 @@ public class PossibleMoves {
                         movesList.add(new Coords(position.getX()+i*upLeft.getX(),position.getY()+i*upLeft.getY()));
                         break;
                     }
-                    else{
+                    else if (tempPiece.getPieceColor() == PieceColor.WHITE){
                         break; //maybe check piececolor.white
                     }
+                    else{
+                        break;
+                    }
                 }
+                break;
             case BLACK:
                 for(int i=1; i<8; i++){
                     Piece tempPiece = board.getPiece(position.getX()+i*upLeft.getX(), position.getY()+i*upLeft.getY());
@@ -803,8 +842,11 @@ public class PossibleMoves {
                         break; //maybe check piececolor.white
                     }
                 }
+                break;
         }
     }
+
+
 
 
     public int size(){
@@ -815,13 +857,39 @@ public class PossibleMoves {
         return movesList.get(index);
     }
 
+    private void removeCheckPosFromList(Piece piece){
+        for(int i=1; i<9; i++) {
+            for (int j = 1; j < 9; j++) {
+                if (piece.getPieceColor() == PieceColor.WHITE) {
+                    if (this.board.getPiece(i, j).getPieceColor() == PieceColor.BLACK && this.board.getPiece(i, j).getPieceType() != PieceType.KING) {
+                        PossibleMoves tempList = new PossibleMoves(this.board.getPiece(i,j), this.board);
+                        for(int k=0; k<this.movesList.size(); k++){
+                            if(tempList.contains(this.movesList.get(k))){
+                                this.movesList.remove(k);
+                            }
+                        }
+                    }
+                }
+                else if (piece.getPieceColor() == PieceColor.BLACK) {
+                    if (this.board.getPiece(i, j).getPieceColor() == PieceColor.WHITE && this.board.getPiece(i, j).getPieceType() != PieceType.KING) {
+                        PossibleMoves tempList = new PossibleMoves(this.board.getPiece(i,j), this.board);
+                        for(int k=0; k<this.movesList.size(); k++){
+                            if(this.movesList.contains(tempList.get(k))){
+                                this.movesList.remove(k);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public ArrayList<Coords> getList(){
         return movesList;
     }
 
     public boolean contains(Coords position) {
-        if(movesList.contains(position)){
+        if(this.movesList.contains(position)){
             return true;
         }
         else{
@@ -829,4 +897,12 @@ public class PossibleMoves {
         }
     }
 
+    public void remove(int index){
+        this.movesList.remove(index);
+        this.movesList.add(new Coords(-1,-1));
+    }
+
+    public void setCoordsToNull(int index){
+        this.movesList.get(index).setNull();
+    }
 }

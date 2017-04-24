@@ -27,4 +27,9 @@ public class Coords {
     public void setX(int x) {
         this.x = x;
     }
+
+    public void setNull(){
+        this.x = -1;
+        this.y = -1;
+    }
 }
