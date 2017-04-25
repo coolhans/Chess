@@ -19,6 +19,8 @@ public class GameFrame extends JFrame implements MouseListener {
     private Piece currentSelectedPiece = new None();
     private PossibleMoves list = new PossibleMoves();
     private PossibleMoves checkList = new PossibleMoves();
+    private PossibleMoves checkMateList = new PossibleMoves();
+
     private JLabel playerLabel;
     private JLabel checkLabel;
     private ArrayList<Coords> checkPieces = new ArrayList<Coords>();
@@ -218,9 +220,15 @@ public class GameFrame extends JFrame implements MouseListener {
 
                             System.out.println("cCOUNTER @ MOVE: " + clickCounter);
 
+                            //CHECK CHECK
                             if(checkEnemyCheck(savedSelectedPiece)){
                                 GameComponent.checkPieces = this.checkPieces;
                                 this.checkPieces = new ArrayList<Coords>();
+
+                                //CHECK CHECKMATE
+                                if(checkCheckMate(savedSelectedPiece)){
+                                    System.out.println("CHECKMATE LOL");
+                                }
                             }
                             else if(!checkEnemyCheck(savedSelectedPiece)){
                                 this.checkPieces = new ArrayList<Coords>();
@@ -243,21 +251,8 @@ public class GameFrame extends JFrame implements MouseListener {
                 }
             }
             else if(clickCounter == 0 && currentSelectedPiece.getPieceColor() == color){
-                this.clickCounter++;
                 //Press and select piece
-                this.savedSelectedPiece = currentSelectedPiece;
-                savedSelectedPiece.selectPiece();
-                GameComponent.selectedPiece = savedSelectedPiece;
-                this.board.selectPiece(savedSelectedPiece);
-                GameComponent.list = this.list;
-                this.checkList = new PossibleMoves(this.savedSelectedPiece, this.board);
-                for(int i=0; i<checkList.getList().size(); i++){
-                    System.out.println("checklist element: " + checkList.getList().get(i).getX() + ", " + checkList.getList().get(i).getY());
-                }
-                System.out.println("cCOUNTER @ select piece: " + clickCounter);
-                if (checkList.size() == 0){
-                    clearPiece();
-                }
+                selectPiece();
             }
             else{
                 //this.clickCounter = 0;
@@ -287,15 +282,24 @@ public class GameFrame extends JFrame implements MouseListener {
 
                             this.board.nextTurn();
 
-
+                            //CHECK CHECK
                             if(checkEnemyCheck(savedSelectedPiece)){
                                 GameComponent.checkPieces = this.checkPieces;
                                 this.checkPieces = new ArrayList<Coords>();
+
+                                //CHECK CHECKMATE
+                                if(checkCheckMate(savedSelectedPiece)){
+                                    System.out.println("CHECKMATE LOL");
+                                }
                             }
                             else if(!checkEnemyCheck(savedSelectedPiece)){
                                 this.checkPieces = new ArrayList<Coords>();
                                 GameComponent.checkPieces = this.checkPieces;
                                 this.checkState = false;
+                            }
+
+                            if(checkCheckMate(savedSelectedPiece)){
+                                System.out.println("CHECKMATE LOL");
                             }
                             updateLabel();
                             clearPiece();
@@ -318,11 +322,26 @@ public class GameFrame extends JFrame implements MouseListener {
         }
         else{
             clearPiece();
+            //selectPiece();
             System.out.println("We are on ELSE case: " + clickCounter);
         }
         System.out.println("Clickcounter: " + this.clickCounter);
     }
 
+    private void selectPiece(){
+        this.clickCounter++;
+        this.savedSelectedPiece = currentSelectedPiece;
+        savedSelectedPiece.selectPiece();
+        GameComponent.selectedPiece = savedSelectedPiece;
+        this.board.selectPiece(savedSelectedPiece);
+        GameComponent.list = this.list;
+        this.checkList = new PossibleMoves(this.savedSelectedPiece, this.board);
+        System.out.println("cCOUNTER @ select piece: " + clickCounter);
+        if (checkList.size() == 0){
+            clearPiece();
+        }
+        //boardChanged();
+    }
     private boolean checkEnemyCheck(Piece piece){
         boolean returnValue = false;
         for(int i=1; i<9; i++) {
@@ -331,6 +350,7 @@ public class GameFrame extends JFrame implements MouseListener {
                     PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j, i), this.board);
                     for(int k=0; k<tempList.size(); k++){
                         if(this.board.getPiece(tempList.get(k).getX(), tempList.get(k).getY()).getPieceType() == PieceType.KING){
+                            this.checkMateList = new PossibleMoves(this.board.getPiece(tempList.get(k).getX(), tempList.get(k).getY()), this.board);
                             this.checkState = true;
                             returnValue = true;
                             if(!checkPieces.contains(tempList.get(k))){
@@ -390,6 +410,74 @@ public class GameFrame extends JFrame implements MouseListener {
         return true;
     }
 
+    private boolean checkCheckMate(Piece piece){
+        PossibleMoves pieceList;
+        boolean checkMate = false;
+        ArrayList<Boolean> checkMateList = new ArrayList<Boolean>();
+        for(int o=0; o<this.checkList.getList().size(); o++){
+            checkMateList.add(true);
+        }
+
+
+        for(int i=1; i<9; i++) {
+            for (int j = 1; j < 9; j++) {
+                if (piece.getPieceColor() == PieceColor.WHITE) {
+                    if (this.board.getPiece(j, i).getPieceColor() == PieceColor.BLACK) {
+                        PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j,i), this.board);
+                        for(int k=0; k<tempList.getList().size(); k++){
+                            for(int p=0; p<this.checkList.getList().size(); p++){
+                                pieceList = new PossibleMoves(this.board.getPiece(this.checkList.get(p).getX(), this.checkList.get(p).getY()), this.board);
+                                if(this.board.getPiece(j, i).getPieceType() != PieceType.KNIGHT && this.board.getPiece(j, i).getPieceType() != PieceType.PAWN){
+                                    for(int l=0; l<pieceList.getList().size(); l++){
+                                        if(tempList.get(k).getX() == pieceList.get(k).getX() && tempList.get(k).getY() == pieceList.get(k).getY()){
+                                            if(checkSelfCheck(this.board.getPiece(j,i),this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()))){
+                                                checkMateList.set(p, false);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(this.board.getPiece(j, i).getPieceType() == PieceType.KNIGHT || this.board.getPiece(j, i).getPieceType() == PieceType.PAWN){
+                                    if(tempList.get(k).getX() == checkList.get(k).getX() && tempList.get(k).getY() == checkList.get(k).getY()){
+                                        checkMateList.set(p, false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (piece.getPieceColor() == PieceColor.BLACK) {
+                    if (this.board.getPiece(j, i).getPieceColor() == PieceColor.WHITE) {
+                        PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j,i), this.board);
+                        for(int k=0; k<tempList.getList().size(); k++){
+                            for(int p=0; p<this.checkList.getList().size(); p++){
+                                pieceList = new PossibleMoves(this.board.getPiece(this.checkList.get(p).getX(), this.checkList.get(p).getY()), this.board);
+                                if(this.board.getPiece(j, i).getPieceType() != PieceType.KNIGHT && this.board.getPiece(j, i).getPieceType() != PieceType.PAWN){
+                                    for(int l=0; l<pieceList.getList().size(); l++){
+                                        if(tempList.get(k).getX() == pieceList.get(k).getX() && tempList.get(k).getY() == pieceList.get(k).getY()){
+                                            if(checkSelfCheck(this.board.getPiece(j,i),this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()))){
+                                                checkMateList.set(p, false);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(this.board.getPiece(j, i).getPieceType() == PieceType.KNIGHT || this.board.getPiece(j, i).getPieceType() == PieceType.PAWN){
+                                    if(tempList.get(k).getX() == checkList.get(k).getX() && tempList.get(k).getY() == checkList.get(k).getY()){
+                                        checkMateList.set(p, false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for(int o=0; o<this.checkMateList.size(); o++){
+            if(checkMateList.get(o)){
+                checkMate=true;
+            }
+        }
+        return checkMate;
+    }
 
     private void clearPiece(){
         this.savedSelectedPiece = new None(new Coords(currentSelectedPiece.getPosition().getX(), currentSelectedPiece.getPosition().getY()));
