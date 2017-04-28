@@ -12,6 +12,8 @@ import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.JFrame;
 
+import static java.lang.Math.abs;
+
 public class GameFrame extends JFrame implements MouseListener {
     private Board board;
     private int clickCounter = 0;
@@ -19,11 +21,13 @@ public class GameFrame extends JFrame implements MouseListener {
     private Piece currentSelectedPiece = new None();
     private PossibleMoves list = new PossibleMoves();
     private PossibleMoves checkList = new PossibleMoves();
-    private PossibleMoves checkMateList = new PossibleMoves();
 
     private JLabel playerLabel;
     private JLabel checkLabel;
-    private ArrayList<Coords> checkPieces = new ArrayList<Coords>();
+
+    private Piece killer = new None();
+    private ArrayList<Coords> killerPath = new ArrayList<Coords>();
+    //private ArrayList<Coords> checkPieces = new ArrayList<Coords>();
     private boolean checkState = false;
 
     public GameFrame(Board board){
@@ -222,17 +226,18 @@ public class GameFrame extends JFrame implements MouseListener {
 
                             //CHECK CHECK
                             if(checkEnemyCheck(savedSelectedPiece)){
-                                GameComponent.checkPieces = this.checkPieces;
-                                this.checkPieces = new ArrayList<Coords>();
-
+                                System.out.println("Checking check----------------------------------------------------------------------");
+                                GameComponent.killer = this.killer;
                                 //CHECK CHECKMATE
+                                System.out.println("entering checkmatefunctionnnnnn");
                                 if(checkCheckMate(savedSelectedPiece)){
-                                    System.out.println("CHECKMATE LOL");
+                                    System.out.println("CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL ");
                                 }
+                                this.killer = new None();
                             }
                             else if(!checkEnemyCheck(savedSelectedPiece)){
-                                this.checkPieces = new ArrayList<Coords>();
-                                GameComponent.checkPieces = this.checkPieces;
+                                this.killer = new None();
+                                GameComponent.killer = this.killer;
                                 this.checkState = false;
                             }
                             updateLabel();
@@ -284,22 +289,19 @@ public class GameFrame extends JFrame implements MouseListener {
 
                             //CHECK CHECK
                             if(checkEnemyCheck(savedSelectedPiece)){
-                                GameComponent.checkPieces = this.checkPieces;
-                                this.checkPieces = new ArrayList<Coords>();
-
+                                System.out.println("Checking check----------------------------------------------------------------------");
+                                GameComponent.killer = this.killer;
                                 //CHECK CHECKMATE
+                                System.out.println("entering checkmatefunctionnnnnn");
                                 if(checkCheckMate(savedSelectedPiece)){
-                                    System.out.println("CHECKMATE LOL");
+                                    System.out.println("CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL ");
                                 }
+                                this.killer = new None();
                             }
                             else if(!checkEnemyCheck(savedSelectedPiece)){
-                                this.checkPieces = new ArrayList<Coords>();
-                                GameComponent.checkPieces = this.checkPieces;
+                                this.killer = new None();
+                                GameComponent.killer = this.killer;
                                 this.checkState = false;
-                            }
-
-                            if(checkCheckMate(savedSelectedPiece)){
-                                System.out.println("CHECKMATE LOL");
                             }
                             updateLabel();
                             clearPiece();
@@ -343,6 +345,7 @@ public class GameFrame extends JFrame implements MouseListener {
         //boardChanged();
     }
     private boolean checkEnemyCheck(Piece piece){
+        int diffX, diffY;
         boolean returnValue = false;
         for(int i=1; i<9; i++) {
             for(int j=1; j<9; j++) {
@@ -350,14 +353,97 @@ public class GameFrame extends JFrame implements MouseListener {
                     PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j, i), this.board);
                     for(int k=0; k<tempList.size(); k++){
                         if(this.board.getPiece(tempList.get(k).getX(), tempList.get(k).getY()).getPieceType() == PieceType.KING){
-                            this.checkMateList = new PossibleMoves(this.board.getPiece(tempList.get(k).getX(), tempList.get(k).getY()), this.board);
                             this.checkState = true;
                             returnValue = true;
-                            if(!checkPieces.contains(tempList.get(k))){
-                                this.checkPieces.add(tempList.get(k));
-                            }
-                            if(!checkPieces.contains(new Coords(j,i))){
-                                this.checkPieces.add(new Coords(j,i));
+                            this.killer = this.board.getPiece(j,i);
+                            if(this.board.getPiece(j, i).getPieceType() != PieceType.KNIGHT && this.board.getPiece(j, i).getPieceType() != PieceType.PAWN){
+                                diffX = j-tempList.get(k).getX();
+                                diffY = i-tempList.get(k).getY();
+                                System.out.println("decidingKillerPath");
+                                System.out.println("diffX: " + diffX + " diffY: " + diffY);
+                                //bishopmoves
+                                if(this.board.getPiece(j, i).getPieceType() == PieceType.BISHOP || (this.board.getPiece(j, i).getPieceType() == PieceType.QUEEN && (j!=tempList.get(k).getX() || i!=tempList.get(k).getY()))){
+                                    if(diffX<0&&diffY<0){
+                                        for(int l=-1; l>diffX; l--) {
+                                            for(int m=-1; m>diffY; m--) {
+                                                if(abs(l) == abs(m)){
+                                                    this.killerPath.add(new Coords(tempList.get(k).getX()+l, tempList.get(k).getY()+m));
+                                                    System.out.println("killerpath 1");
+                                                    System.out.println("killerPath Element: x=" + tempList.get(k).getX()+l + "y=" + tempList.get(k).getY()+m);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if(diffX>0&&diffY<0){
+                                        for(int l=1; l<diffX; l++) {
+                                            for(int m=-1; m>diffY; m--) {
+                                                if(abs(l) == abs(m)){
+                                                    this.killerPath.add(new Coords(tempList.get(k).getX()+l, tempList.get(k).getY()+m));
+                                                    System.out.println("killerpath 2");
+                                                    System.out.println("killerPath Element: x=" + tempList.get(k).getX()+l + "y=" + tempList.get(k).getY()+m);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if(diffX<0&&diffY>0){
+                                        for(int l=-1; l>diffX; l--) {
+                                            for(int m=1; m<diffY; m++) {
+                                                if(abs(l) == abs(m)){
+                                                    this.killerPath.add(new Coords(tempList.get(k).getX()+l, tempList.get(k).getY()+m));
+                                                    System.out.println("killerpath 3");
+                                                    System.out.println("killerPath Element: x=" + (tempList.get(k).getX()+l) + "y=" + (tempList.get(k).getY()+m));
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if(diffX>0&&diffY>0){
+                                        for(int l=1; l<diffX; l++) {
+                                            for(int m=1; m<diffY; m++) {
+                                                if(abs(l) == abs(m)){
+                                                    System.out.println("killerpath 4");
+                                                    this.killerPath.add(new Coords(tempList.get(k).getX()+l, tempList.get(k).getY()+m));
+                                                    System.out.println("killerPath Element: x=" + tempList.get(k).getX()+l + "y=" + tempList.get(k).getY()+m);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                //rook moves
+                                else if(this.board.getPiece(j, i).getPieceType() == PieceType.ROOK || (this.board.getPiece(j, i).getPieceType() == PieceType.QUEEN && (j==tempList.get(k).getX() || i==tempList.get(k).getY()))){
+                                    if(diffX==0&&diffY<0){
+                                        for(int m=-1; m>diffY; m--) {
+                                            this.killerPath.add(new Coords(tempList.get(k).getX(), tempList.get(k).getY()+m));
+                                            System.out.println("killerpath 1");
+                                            System.out.println("killerPath Element: x=" + tempList.get(k).getX() + "y=" + tempList.get(k).getY()+m);
+
+                                        }
+
+                                    }
+                                    else if(diffX==0&&diffY>0){
+                                        for(int l=1; l<diffX; l++) {
+                                            for(int m=1; m>diffY; m++) {
+                                                this.killerPath.add(new Coords(tempList.get(k).getX(), tempList.get(k).getY()+m));
+                                                System.out.println("killerpath 2");
+                                                System.out.println("killerPath Element: x=" + tempList.get(k).getX()+l + "y=" + tempList.get(k).getY()+m);
+
+                                            }
+                                        }
+                                    }
+                                    else if(diffX<0&&diffY==0){
+                                        for(int l=-1; l>diffX; l--) {
+                                            this.killerPath.add(new Coords(tempList.get(k).getX()+l, tempList.get(k).getY()));
+                                            System.out.println("killerpath 3");
+                                            System.out.println("killerPath Element: x=" + (tempList.get(k).getX()+l) + "y=" + (tempList.get(k).getY()));
+                                        }
+                                    }
+                                    else if(diffX>0&&diffY==0){
+                                        for(int l=1; l<diffX; l++) {
+                                            System.out.println("killerpath 4");
+                                            this.killerPath.add(new Coords(tempList.get(k).getX()+l, tempList.get(k).getY()));
+                                            System.out.println("killerPath Element: x=" + tempList.get(k).getX()+l + "y=" + tempList.get(k).getY());
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -370,8 +456,13 @@ public class GameFrame extends JFrame implements MouseListener {
     private boolean checkSelfCheck(Piece piece, Piece movePiece){
         //Temporarily ignore selected piece
         Piece savePiece = this.board.getPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY());
-        this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), new None());
+        Coords saveCoordsForPiece = piece.getPosition();
+        this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), new None(piece.getPosition()));
+        piece.Move(movePiece.getPosition());
         this.board.setPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY(), piece);
+
+
+        System.out.println("x=4, y=3 : " + this.board.getPiece(4,3).getPieceType());
         //Tempo....
         for(int i=1; i<9; i++){
             for(int j=1; j<9; j++){
@@ -382,7 +473,7 @@ public class GameFrame extends JFrame implements MouseListener {
                             if (this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()).getPieceType() == PieceType.KING  && this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()).getPieceColor() == PieceColor.WHITE){
                                 this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), piece);
                                 this.board.setPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY(), savePiece);
-                                System.out.println("CheckSelfCheck: list for piece: x= " + i + ", y=" + j);
+                                System.out.println("CheckSelfCheck: (WHITE) list for piece: x= " + j + ", y=" + i);
                                 System.out.println("CheckSelfCheck: x= " + tempList.get(k).getX() + ", y= "+ tempList.get(k).getY());
                                 return false;
                             }
@@ -393,10 +484,11 @@ public class GameFrame extends JFrame implements MouseListener {
                     if(this.board.getPiece(j,i).getPieceColor() == PieceColor.WHITE){
                         PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j,i), this.board);
                         for(int k=0; k<tempList.getList().size(); k++){
+                            System.out.println("selfcheck BLACK: Piece(j,i):" + this.board.getPiece(j,i).getPieceType() + "its templist: x= " + tempList.get(k).getX() + ", y= "+ tempList.get(k).getY() + " and piecetype: " + this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()).getPieceType());
                             if (this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()).getPieceType() == PieceType.KING && this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()).getPieceColor() == PieceColor.BLACK){
                                 this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), piece);
                                 this.board.setPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY(), savePiece);
-                                System.out.println("CheckSelfCheck: list for piece: x= " + i + ", y=" + j);
+                                System.out.println("CheckSelfCheck: (BLACK) list for piece: x= " + j + ", y=" + i);
                                 System.out.println("CheckSelfCheck: King pos: x= " + tempList.get(k).getX() + ", y= "+ tempList.get(k).getY());
                                 return false;
                             }
@@ -405,40 +497,56 @@ public class GameFrame extends JFrame implements MouseListener {
                 }
             }
         }
-        this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), piece);
+        piece.Move(saveCoordsForPiece);
+        this.board.setPiece(saveCoordsForPiece.getX(),saveCoordsForPiece.getY(), piece);
         this.board.setPiece(movePiece.getPosition().getX(), movePiece.getPosition().getY(), savePiece);
         return true;
     }
 
     private boolean checkCheckMate(Piece piece){
-        PossibleMoves pieceList;
+        boolean kingListSizeIsNull = false;
         boolean checkMate = false;
-        ArrayList<Boolean> checkMateList = new ArrayList<Boolean>();
-        for(int o=0; o<this.checkList.getList().size(); o++){
-            checkMateList.add(true);
-        }
-
-
         for(int i=1; i<9; i++) {
             for (int j = 1; j < 9; j++) {
                 if (piece.getPieceColor() == PieceColor.WHITE) {
                     if (this.board.getPiece(j, i).getPieceColor() == PieceColor.BLACK) {
                         PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j,i), this.board);
                         for(int k=0; k<tempList.getList().size(); k++){
-                            for(int p=0; p<this.checkList.getList().size(); p++){
-                                pieceList = new PossibleMoves(this.board.getPiece(this.checkList.get(p).getX(), this.checkList.get(p).getY()), this.board);
-                                if(this.board.getPiece(j, i).getPieceType() != PieceType.KNIGHT && this.board.getPiece(j, i).getPieceType() != PieceType.PAWN){
-                                    for(int l=0; l<pieceList.getList().size(); l++){
-                                        if(tempList.get(k).getX() == pieceList.get(k).getX() && tempList.get(k).getY() == pieceList.get(k).getY()){
-                                            if(checkSelfCheck(this.board.getPiece(j,i),this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()))){
-                                                checkMateList.set(p, false);
-                                            }
+                            if(this.board.getPiece(j, i).getPieceType() != PieceType.KNIGHT && this.board.getPiece(j, i).getPieceType() != PieceType.PAWN && this.board.getPiece(j, i).getPieceType() != PieceType.KING){
+                                for(int l=0; l<killerPath.size(); l++){
+                                    if(tempList.get(k).getX() == killerPath.get(l).getX() && tempList.get(k).getY() == killerPath.get(l).getY()){
+                                        System.out.println("finding interrupt 1");
+                                        System.out.println("checking piece: " + this.board.getPiece(j,i));
+                                        if(checkSelfCheck(this.board.getPiece(j,i),this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()))){
+                                            System.out.println("checkmate checkselfcheck1");
+                                            checkMate = true;
                                         }
                                     }
                                 }
-                                else if(this.board.getPiece(j, i).getPieceType() == PieceType.KNIGHT || this.board.getPiece(j, i).getPieceType() == PieceType.PAWN){
-                                    if(tempList.get(k).getX() == checkList.get(k).getX() && tempList.get(k).getY() == checkList.get(k).getY()){
-                                        checkMateList.set(p, false);
+                            }
+                            else if(this.board.getPiece(j, i).getPieceType() == PieceType.KNIGHT || this.board.getPiece(j, i).getPieceType() == PieceType.PAWN){
+                                System.out.println("knight or pawn:");
+                                System.out.println("finding interrupt 2");
+                                System.out.println("checking piece: " + this.board.getPiece(j,i));
+                                if(tempList.get(k).getX() == this.killer.getPosition().getX() && tempList.get(k).getY() == this.killer.getPosition().getY()){
+                                    System.out.println("checkmate checkselfcheck2");
+                                    checkMate = true;
+                                }
+                            }
+                            else if(this.board.getPiece(j, i).getPieceType() == PieceType.KING){
+                                PossibleMoves kingList = new PossibleMoves(this.board.getPiece(j, i), this.board);
+                                System.out.println("checking piece: " + this.board.getPiece(j,i));
+                                System.out.println("checkmate checkselfcheck3 IF KING: ¨¨¨¨: " + kingList.getList().size());
+                                for(int c=0; c<kingList.getList().size(); c++){
+                                    System.out.println("kinglist element c: " + c +  ", x: "+ kingList.get(c).getX() + ", y: " + kingList.get(c).getY());
+                                    if(checkSelfCheck(this.board.getPiece(j,i),this.board.getPiece(kingList.get(c).getX(),kingList.get(c).getY()))){
+                                        System.out.println("checkhcehk at king OK move(no check)");
+                                        kingListSizeIsNull = false;
+                                        break;
+                                    }
+                                    else{
+                                        System.out.println("checkcheckchceck at king not ok move (good thing(hehe))");
+                                        kingListSizeIsNull = true;
                                     }
                                 }
                             }
@@ -449,20 +557,37 @@ public class GameFrame extends JFrame implements MouseListener {
                     if (this.board.getPiece(j, i).getPieceColor() == PieceColor.WHITE) {
                         PossibleMoves tempList = new PossibleMoves(this.board.getPiece(j,i), this.board);
                         for(int k=0; k<tempList.getList().size(); k++){
-                            for(int p=0; p<this.checkList.getList().size(); p++){
-                                pieceList = new PossibleMoves(this.board.getPiece(this.checkList.get(p).getX(), this.checkList.get(p).getY()), this.board);
-                                if(this.board.getPiece(j, i).getPieceType() != PieceType.KNIGHT && this.board.getPiece(j, i).getPieceType() != PieceType.PAWN){
-                                    for(int l=0; l<pieceList.getList().size(); l++){
-                                        if(tempList.get(k).getX() == pieceList.get(k).getX() && tempList.get(k).getY() == pieceList.get(k).getY()){
-                                            if(checkSelfCheck(this.board.getPiece(j,i),this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()))){
-                                                checkMateList.set(p, false);
-                                            }
+                            if(this.board.getPiece(j, i).getPieceType() != PieceType.KNIGHT && this.board.getPiece(j, i).getPieceType() != PieceType.PAWN && this.board.getPiece(j, i).getPieceType() != PieceType.KING){
+                                for(int l=0; l<killerPath.size(); l++){
+                                    if(tempList.get(k).getX() == killerPath.get(l).getX() && tempList.get(k).getY() == killerPath.get(l).getY()){
+                                        System.out.println("finding interrupt 3");
+                                        if(checkSelfCheck(this.board.getPiece(j,i),this.board.getPiece(tempList.get(k).getX(),tempList.get(k).getY()))){
+                                            System.out.println("checkmate checkselfcheck4");
+                                            checkMate = true;
                                         }
                                     }
                                 }
-                                else if(this.board.getPiece(j, i).getPieceType() == PieceType.KNIGHT || this.board.getPiece(j, i).getPieceType() == PieceType.PAWN){
-                                    if(tempList.get(k).getX() == checkList.get(k).getX() && tempList.get(k).getY() == checkList.get(k).getY()){
-                                        checkMateList.set(p, false);
+                            }
+                            else if(this.board.getPiece(j, i).getPieceType() == PieceType.KNIGHT || this.board.getPiece(j, i).getPieceType() == PieceType.PAWN){
+                                System.out.println("knight or pawn:");
+                                System.out.println("finding interrupt 4");
+                                if(tempList.get(k).getX() == this.killer.getPosition().getX() && tempList.get(k).getY() == this.killer.getPosition().getY()){
+                                    System.out.println("checkmate checkselfcheck5");
+                                    checkMate = true;
+                                }
+                            }
+                            else if(this.board.getPiece(j, i).getPieceType() == PieceType.KING){
+                                PossibleMoves kingList = new PossibleMoves(this.board.getPiece(j, i), this.board);
+                                System.out.println("checkmate checkselfcheck6 IF KING: " + kingList.getList().size());
+                                for(int c=0; c<kingList.getList().size(); c++){
+                                    System.out.println("kinglist element: "+ kingList.get(c).getX());
+                                    if(checkSelfCheck(this.board.getPiece(j,i),this.board.getPiece(kingList.get(c).getX(),kingList.get(c).getY()))){
+                                        kingListSizeIsNull = false;
+                                        break;
+                                    }
+                                    else{
+                                        System.out.println("checkcheckchceck (BLACK CHECKER) at king ok move");
+                                        kingListSizeIsNull = true;
                                     }
                                 }
                             }
@@ -471,12 +596,11 @@ public class GameFrame extends JFrame implements MouseListener {
                 }
             }
         }
-        for(int o=0; o<this.checkMateList.size(); o++){
-            if(checkMateList.get(o)){
-                checkMate=true;
-            }
+        System.out.println("kinglistsizeisnull: " + kingListSizeIsNull);
+        if(kingListSizeIsNull && !checkMate){
+            return true;
         }
-        return checkMate;
+        return false;
     }
 
     private void clearPiece(){

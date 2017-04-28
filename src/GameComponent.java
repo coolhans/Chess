@@ -8,7 +8,7 @@ public class GameComponent extends JComponent implements BoardListener {
     static PossibleMoves list;
     private final Board board;
     public static Piece selectedPiece = new None();
-    static ArrayList<Coords> checkPieces = new ArrayList<Coords>();
+    static Piece killer = new None();
     private ImageIcon img = new ImageIcon();
     public GameComponent(Board board) {
         this.board = board;
@@ -37,12 +37,12 @@ public class GameComponent extends JComponent implements BoardListener {
                     g.fillRect(x * 60, y * 60, 60, 60);
                 }
 
-                for (int i = 0; i < checkPieces.size(); i++) {
-                    if (checkPieces.get(i).getY() == y && checkPieces.get(i).getX() == x) {
-                        g.setColor(Color.PINK);
-                        g.fillRect(x * 60,y * 60, 60, 60);
-                    }
+                //Checker
+                if (killer.getPosition().getY() == y &&killer.getPosition().getX() == x) {
+                    g.setColor(Color.PINK);
+                    g.fillRect(x * 60,y * 60, 60, 60);
                 }
+
             }
         }
 
