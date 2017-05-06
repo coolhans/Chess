@@ -15,7 +15,7 @@ public class Main {
             }
         };
 
-        final Timer clockTimer = new Timer (150, doOneStep);
+        final Timer clockTimer = new Timer (1000, doOneStep);
         clockTimer.setCoalesce(true);
         clockTimer.start();
     }

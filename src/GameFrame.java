@@ -1,5 +1,3 @@
-import javafx.geometry.Pos;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,8 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import javax.swing.*;
 import javax.swing.JFrame;
 
 import static java.lang.Math.abs;
@@ -24,7 +20,9 @@ public class GameFrame extends JFrame implements MouseListener {
 
     private JLabel playerLabel;
     private JLabel checkLabel;
-
+    private JLabel checkmateLabel;
+    public static JLabel timeLabel;
+    public static int timeCounter = 0;
     private Piece killer = new None();
     private ArrayList<Coords> killerPath = new ArrayList<Coords>();
     //private ArrayList<Coords> checkPieces = new ArrayList<Coords>();
@@ -39,20 +37,44 @@ public class GameFrame extends JFrame implements MouseListener {
         this.add(gameComponent,BorderLayout.CENTER);
         this.board = board;
 
-        playerLabel = new JLabel("Player: White");
-        this.add(playerLabel,BorderLayout.NORTH);
-
-        checkLabel = new JLabel("");
-        this.add(checkLabel,BorderLayout.SOUTH);
-
-
-
+	createLabelPanel();
         createMenu();
         this.pack();
         this.setVisible(true);
         addMouseListener(this);
     }
 
+    private void createLabelPanel(){
+        JPanel labelPanel = new JPanel(new BorderLayout());
+        playerLabel = new JLabel("Player: White");
+        checkLabel = new JLabel("Check: ");
+	checkmateLabel = new JLabel("");
+        timeLabel = new JLabel("Time Elapsed: " + timeCounter);
+        playerLabel.setPreferredSize(new Dimension(150, 100));
+
+        playerLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
+        checkLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
+        timeLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
+	checkmateLabel.setBorder(BorderFactory.createCompoundBorder(
+         BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
+
+        labelPanel.setBorder(BorderFactory.createTitledBorder("Information"));
+        labelPanel.setOpaque(true);
+        labelPanel.setBackground(Color.WHITE);
+        this.add(labelPanel, BorderLayout.EAST);
+
+        BoxLayout boxLayout = new BoxLayout(labelPanel, BoxLayout.Y_AXIS); // top to bottom
+        labelPanel.setLayout(boxLayout);
+        labelPanel.add(playerLabel);
+	labelPanel.add(timeLabel);
+        labelPanel.add(checkLabel);
+	labelPanel.add(checkmateLabel);
+
+        labelPanel.setPreferredSize(new Dimension(195,200));
+    }
 
     private void createMenu(){
         final JMenu file = new JMenu("File");
@@ -76,16 +98,16 @@ public class GameFrame extends JFrame implements MouseListener {
 
     public void updateLabel() {
         if(this.board.getTurn()%2==0){
-            playerLabel.setText("Player: Black");
-        }
-        else if(this.board.getTurn()%2==1){
             playerLabel.setText("Player: White");
         }
-        if(checkState){
-            checkLabel.setText("Check");
+        else if(this.board.getTurn()%2==1){
+            playerLabel.setText("Player: Black");
         }
+        if(checkState) {
+	    checkLabel.setText("CHECK!");
+	}
         if(!checkState){
-            checkLabel.setText("");
+            checkLabel.setText("Not check");
         }
         boardChanged();
     }
@@ -247,9 +269,10 @@ public class GameFrame extends JFrame implements MouseListener {
                                 System.out.println("Checking check----------------------------------------------------------------------");
                                 GameComponent.killer = this.killer;
                                 //CHECK CHECKMATE
-                                System.out.println("entering checkmatefunctionnnnnn");
+                                System.out.println("entering checkmatefunction");
                                 if(checkCheckMate(savedSelectedPiece)){
-                                    System.out.println("CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL ");
+				    checkmateLabel.setText("CHECKMATE, "+ color  +" WINS");
+                                    System.out.println("CHECKMATE CHECKMATE CHECKMATE CHECKMATE CHECKMATE CHECKMATE CHECKMATE CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL ");
                                 }
                                 this.killer = new None();
                             }
@@ -321,9 +344,10 @@ public class GameFrame extends JFrame implements MouseListener {
                                 System.out.println("Checking check----------------------------------------------------------------------");
                                 GameComponent.killer = this.killer;
                                 //CHECK CHECKMATE
-                                System.out.println("entering checkmatefunctionnnnnn");
+                                System.out.println("entering checkmatefunctionn");
                                 if(checkCheckMate(savedSelectedPiece)){
-                                    System.out.println("CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL ");
+				    checkmateLabel.setText("CHECKMATE, "+ color  +" WINS");
+                                    System.out.println("CHECKMATE CHECKMATE CHECKMATE CHECKMATE CHECKMATE CHECKMATE CHECKMATE CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL CHECKMATE LOL ");
                                 }
                                 this.killer = new None();
                             }
@@ -634,7 +658,7 @@ public class GameFrame extends JFrame implements MouseListener {
     }
 
     private void pawnToQueen(Piece piece){
-        this.board.removePiece(piece.getPosition().getX(), piece.getPosition().getY());
+        //this.board.removePiece(piece.getPosition().getX(), piece.getPosition().getY());
         this.board.setPiece(piece.getPosition().getX(), piece.getPosition().getY(), new Queen(piece.getPieceColor(), piece.getPosition()));
     }
 

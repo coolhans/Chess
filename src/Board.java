@@ -108,20 +108,8 @@ public class Board {
     }
     //------------------------------------------------------------------------------
     public void tick(Board myboard){ //function of every tick (timer)
-        /*if(){
-        }
-        else{//
-            //checkCollision();
-            //do what
-        }
-        */
+	GameFrame.timeCounter++;
+	GameFrame.timeLabel.setText("Time Elapsed: "+GameFrame.timeCounter);
 
 }
-    final Action moveRight = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-                notifyListeners();
-            }
-    };
-
 }

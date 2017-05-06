@@ -416,44 +416,138 @@ public class PossibleMoves {
 
         switch(color) {
             case WHITE:
+                    if(piece.getPosition().getY()>2){
+                        if(piece.getPosition().getX()>1){
+                            if (board.getPiece(position.getX() - 1, position.getY() - 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() - 2).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() - 1, piece.getPosition().getY() - 2));
+                            }
+                        }
+
+                        if(piece.getPosition().getX()<8){
+                            if (board.getPiece(position.getX() + 1, position.getY() - 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() - 2).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() + 1, piece.getPosition().getY() - 2));
+                            }
+                        }
+                    }
                     if(piece.getPosition().getY()>1){
-                        if (board.getPiece(position.getX() - 1, position.getY() - 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() - 2).getPieceColor() == PieceColor.BLACK) {
-                            movesList.add(new Coords(piece.getPosition().getX() - 1, piece.getPosition().getY() - 2));
+                        if(piece.getPosition().getX()>2){
+                            if (board.getPiece(position.getX() - 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 2, position.getY() - 1).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() - 1));
+                            }
                         }
-                        if (board.getPiece(position.getX() + 1, position.getY() - 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() - 2).getPieceColor() == PieceColor.BLACK) {
-                            movesList.add(new Coords(piece.getPosition().getX() + 1, piece.getPosition().getY() - 2));
+                        if(piece.getPosition().getX()<7){
+                            if (board.getPiece(position.getX() + 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 2, position.getY() - 1).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() + 2, piece.getPosition().getY() - 1));
+                            }
+                        }
+                    }
+                    if(piece.getPosition().getY()<7) {
+                        if (piece.getPosition().getX() > 1) {
+                            if (board.getPiece(position.getX() - 1, position.getY() + 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() + 2).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() - 1, piece.getPosition().getY() + 2));
+                            }
+                        }
+                        if (piece.getPosition().getX() < 8) {
+                            if (board.getPiece(position.getX() + 1, position.getY() + 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 1, position.getY() + 2).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() + 1, piece.getPosition().getY() + 2));
+                            }
+                        }
+                    }
+                    if(piece.getPosition().getY() < 8){
+                        if(piece.getPosition().getX()>2){
+                            if (board.getPiece(position.getX() - 2, position.getY() + 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 2, position.getY() + 1).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() + 1));
+                            }
+                        }
+
+                        if(piece.getPosition().getX()<7){
+                            if (board.getPiece(position.getX() + 2, position.getY() + 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 2, position.getY() + 1).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() + 2, piece.getPosition().getY() + 1));
+                            }
                         }
                     }
 
-                    if(piece.getPosition().getX()>1){
-                        if (board.getPiece(position.getX() - 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 2, position.getY() - 1).getPieceColor() == PieceColor.BLACK) {
-                            movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() - 1));
-                        }
-                        if (board.getPiece(position.getX() - 2, position.getY() + 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 2, position.getY() + 1).getPieceColor() == PieceColor.BLACK) {
-                            movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() + 1));
-                        }
-                    }
-                    if(piece.getPosition().getX()<8){
-                        if (board.getPiece(position.getX() + 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 2, position.getY() - 1).getPieceColor() == PieceColor.BLACK) {
-                            movesList.add(new Coords(piece.getPosition().getX() + 2, piece.getPosition().getY() - 1));
-                        }
-                        if (board.getPiece(position.getX() + 2, position.getY() + 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 2, position.getY() + 1).getPieceColor() == PieceColor.BLACK) {
-                            movesList.add(new Coords(piece.getPosition().getX() + 2, piece.getPosition().getY() + 1));
-                        }
-                    }
 
-                    if(piece.getPosition().getY()<8){
-                        if (board.getPiece(position.getX() - 1, position.getY() + 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() + 2).getPieceColor() == PieceColor.BLACK) {
-                            movesList.add(new Coords(piece.getPosition().getX() - 1, piece.getPosition().getY() + 2));
+              /*      if(piece.getPosition().getX()>2){
+                        if(piece.getPosition().getY()>1){
+                            if (board.getPiece(position.getX() - 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 2, position.getY() - 1).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() - 1));
+                            }
                         }
-                        if (board.getPiece(position.getX() + 1, position.getY() + 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() + 2).getPieceColor() == PieceColor.BLACK) {
-                            movesList.add(new Coords(piece.getPosition().getX() + 1, piece.getPosition().getY() + 2));
+                      else if(piece.getPosition().getY()<8){
+                            if (board.getPiece(position.getX() - 2, position.getY() + 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 2, position.getY() + 1).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() + 1));
+                            }
                         }
                     }
+                    else if(piece.getPosition().getX()<7){
+                        if(piece.getPosition().getY()>1){
+                            if (board.getPiece(position.getX() + 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 2, position.getY() - 1).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() + 2, piece.getPosition().getY() - 1));
+                            }
+                        }
+                        else if(piece.getPosition().getY()<8){
+                            if (board.getPiece(position.getX() + 2, position.getY() + 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 2, position.getY() + 1).getPieceColor() == PieceColor.BLACK) {
+                                movesList.add(new Coords(piece.getPosition().getX() + 2, piece.getPosition().getY() + 1));
+                            }
+                        }
+                    }*/
+
                 break;
 
             case BLACK:
+                if(piece.getPosition().getY()>2){
+                    if(piece.getPosition().getX()>1){
+                        if (board.getPiece(position.getX() - 1, position.getY() - 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() - 2).getPieceColor() == PieceColor.WHITE) {
+                            movesList.add(new Coords(piece.getPosition().getX() - 1, piece.getPosition().getY() - 2));
+                        }
+                    }
+
+                    if(piece.getPosition().getX()<8){
+                        if (board.getPiece(position.getX() + 1, position.getY() - 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() - 2).getPieceColor() == PieceColor.WHITE) {
+                            movesList.add(new Coords(piece.getPosition().getX() + 1, piece.getPosition().getY() - 2));
+                        }
+                    }
+                }
                 if(piece.getPosition().getY()>1){
+                    if(piece.getPosition().getX()>2){
+                        if (board.getPiece(position.getX() - 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 2, position.getY() - 1).getPieceColor() == PieceColor.WHITE) {
+                            movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() - 1));
+                        }
+                    }
+                    if(piece.getPosition().getX()<7){
+                        if (board.getPiece(position.getX() + 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 2, position.getY() - 1).getPieceColor() == PieceColor.WHITE) {
+                            movesList.add(new Coords(piece.getPosition().getX() + 2, piece.getPosition().getY() - 1));
+                        }
+                    }
+                }
+                if(piece.getPosition().getY()<7) {
+                    if (piece.getPosition().getX() > 1) {
+                        if (board.getPiece(position.getX() - 1, position.getY() + 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() + 2).getPieceColor() == PieceColor.WHITE) {
+                            movesList.add(new Coords(piece.getPosition().getX() - 1, piece.getPosition().getY() + 2));
+                        }
+                    }
+                    if (piece.getPosition().getX() < 8) {
+                        if (board.getPiece(position.getX() + 1, position.getY() + 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 1, position.getY() + 2).getPieceColor() == PieceColor.WHITE) {
+                            movesList.add(new Coords(piece.getPosition().getX() + 1, piece.getPosition().getY() + 2));
+                        }
+                    }
+                }
+                if(piece.getPosition().getY() < 8){
+                    if(piece.getPosition().getX()>2){
+                        if (board.getPiece(position.getX() - 2, position.getY() + 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 2, position.getY() + 1).getPieceColor() == PieceColor.WHITE) {
+                            movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() + 1));
+                        }
+                    }
+
+                    if(piece.getPosition().getX()<7){
+                        if (board.getPiece(position.getX() + 2, position.getY() + 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 2, position.getY() + 1).getPieceColor() == PieceColor.WHITE) {
+                            movesList.add(new Coords(piece.getPosition().getX() + 2, piece.getPosition().getY() + 1));
+                        }
+                    }
+                }
+
+                /*if(piece.getPosition().getY()>2){
                     if (board.getPiece(position.getX() - 1, position.getY() - 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() - 2).getPieceColor() == PieceColor.WHITE) {
                         movesList.add(new Coords(piece.getPosition().getX() - 1, piece.getPosition().getY() - 2));
                     }
@@ -462,7 +556,7 @@ public class PossibleMoves {
                     }
                 }
 
-                if(piece.getPosition().getX()>1){
+                if(piece.getPosition().getX()>2){
                     if (board.getPiece(position.getX() - 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 2, position.getY() - 1).getPieceColor() == PieceColor.WHITE) {
                         movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() - 1));
                     }
@@ -470,7 +564,7 @@ public class PossibleMoves {
                         movesList.add(new Coords(piece.getPosition().getX() - 2, piece.getPosition().getY() + 1));
                     }
                 }
-                if(piece.getPosition().getX()<8){
+                if(piece.getPosition().getX()<7){
                     if (board.getPiece(position.getX() + 2, position.getY() - 1).getPieceType() == PieceType.NONE || board.getPiece(position.getX() + 2, position.getY() - 1).getPieceColor() == PieceColor.WHITE) {
                         movesList.add(new Coords(piece.getPosition().getX() + 2, piece.getPosition().getY() - 1));
                     }
@@ -479,7 +573,7 @@ public class PossibleMoves {
                     }
                 }
 
-                if(piece.getPosition().getY()<8){
+                if(piece.getPosition().getY()<7){
                     if (board.getPiece(position.getX() - 1, position.getY() + 2).getPieceType() == PieceType.NONE || board.getPiece(position.getX() - 1, position.getY() + 2).getPieceColor() == PieceColor.WHITE) {
                         movesList.add(new Coords(piece.getPosition().getX() - 1, piece.getPosition().getY() + 2));
                     }
@@ -487,7 +581,7 @@ public class PossibleMoves {
                         movesList.add(new Coords(piece.getPosition().getX() + 1, piece.getPosition().getY() + 2));
                     }
                 }
-                break;
+                break;*/
         }
     }
 
@@ -845,9 +939,6 @@ public class PossibleMoves {
                 break;
         }
     }
-
-
-
 
     public int size(){
         return movesList.size();
