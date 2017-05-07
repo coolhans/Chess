@@ -1,21 +1,9 @@
-import java.util.*;
-
+//An abstract class to specify the properties of all the different pieces
 public abstract class Piece {
-    private boolean moved = false;
+
     private boolean selected = false;
-    private boolean available;
 
-    private Board board;
-
-    private Coords position;
-    private PieceColor pieceColor;
-    private PieceType pieceType;
-
-
-
-    public abstract ArrayList<Coords> possibleMoves();
-
-    public abstract void Move(Coords coords);
+    public abstract void move(Coords coords);
 
     public boolean isSelected(){
         return this.selected;
@@ -30,10 +18,6 @@ public abstract class Piece {
     public abstract PieceColor getPieceColor();
 
     public abstract boolean hasMoved();
-
-    public Board getBoard(){
-        return board;
-    }
 
     public abstract PieceType getPieceType();
 

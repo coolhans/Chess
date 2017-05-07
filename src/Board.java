@@ -1,16 +1,7 @@
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.awt.event.ActionEvent;
-
 public class Board {
     public int width;
     public int height;
     public Piece[][] board;
-    private List<BoardListener> listener = new ArrayList<BoardListener>();
-    private Piece selectedPiece = new None();
-    private static Random random = new Random();
     private static int turn = 0;
 
     public int getWidth() {  //get width of the board
@@ -65,18 +56,6 @@ public class Board {
         return board[x][y];
     }
 
-
-
-    private void notifyListeners(){ //function when to make changes
-        for (BoardListener boardListener: listener){
-            boardListener.boardChanged();
-        }
-    }
-
-    public void addBoardListener(BoardListener bl) { //to add listeners
-        listener.add(bl);
-
-    }
     //------------------------------------------------------------------------------
     public void setPiece(int x, int y, Piece piece){
         board[x][y] = piece;
@@ -86,28 +65,15 @@ public class Board {
         board[x][y] = new None(new Coords(x, y));
     }
 
-    public void selectPiece(Piece piece){
-        this.selectedPiece = piece;
-    }
-
-
     public static int getTurn(){
         return turn;
     }
 
     public void nextTurn(){
-        this.turn = turn +1;
-    }
-
-    public Piece getSelectedPiece(){
-        return this.selectedPiece;
-    }
-
-    public void check(){
-
+	this.turn += 1;
     }
     //------------------------------------------------------------------------------
-    public void tick(Board myboard){ //function of every tick (timer)
+    public void tick(){ //function of every tick (timer)
 	GameFrame.timeCounter++;
 	GameFrame.timeLabel.setText("Time Elapsed: "+GameFrame.timeCounter);
 

@@ -1,10 +1,7 @@
-import java.util.ArrayList;
-
 public class None extends Piece{
 
     private Coords position = new Coords();
     private PieceColor color = PieceColor.NOCOLOR;
-    private ArrayList<Coords> movesList = new ArrayList<Coords>();
     private PieceType pieceType = PieceType.NONE;
     private boolean hasMoved = false;
     public None(Coords position){
@@ -12,18 +9,13 @@ public class None extends Piece{
     }
 
     public None(){
-
-    }
-
-    public ArrayList<Coords> possibleMoves(){
-        return this.movesList;
     }
 
     @Override
-    public void Move(Coords newCoords){
+    public void move(Coords coords){
         this.hasMoved = true;
-        this.position.setX(newCoords.getX());
-        this.position.setY(newCoords.getY());
+        this.position.setX(coords.getX());
+        this.position.setY(coords.getY());
     }
 
 

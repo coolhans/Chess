@@ -1,24 +1,13 @@
-import java.util.ArrayList;
-
 public class Outside extends Piece{
 
     private Coords position = new Coords();
     private PieceColor color = PieceColor.NOCOLOR;
-    private ArrayList<Coords> movesList = null;
-    private Piece movePiece = new None();
     private PieceType pieceType = PieceType.OUTSIDE;
-    private boolean hasMoved = false;
 
     public Outside(PieceColor color, Coords position){
         this.color = color;
         this.position = position;
     }
-
-
-    public ArrayList<Coords> possibleMoves(){
-        return this.movesList;
-    }
-
 
     @Override
     public Coords getPosition(){
@@ -27,14 +16,14 @@ public class Outside extends Piece{
 
     @Override
     public boolean hasMoved(){
-        return this.hasMoved;
+	final boolean hasMoved = false;
+	return hasMoved;
     }
 
     @Override
-    public void Move(Coords newCoords){
-        getBoard().setPiece(position.getX(),position.getY(), movePiece);
-        this.position.setX(newCoords.getX());
-        this.position.setY(newCoords.getY());
+    public void move(Coords coords){
+        this.position.setX(coords.getX());
+        this.position.setY(coords.getY());
     }
     @Override
     public PieceColor getPieceColor(){

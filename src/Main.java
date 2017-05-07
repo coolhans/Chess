@@ -11,7 +11,7 @@ public class Main {
         frame.setVisible(true);
         final Action doOneStep = new AbstractAction(){
             public void actionPerformed(ActionEvent e){
-                board.tick(board);
+                board.tick();
             }
         };
 
